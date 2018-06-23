@@ -1,12 +1,19 @@
 package com.nverno.bakingtime.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "step")
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(foreignKeys = @ForeignKey(
+        entity = Recipe.class,
+        parentColumns = "io",
+        childColumns = "recipeId",
+        onDelete = CASCADE))
 public class Step {
 
     @PrimaryKey
@@ -21,6 +28,12 @@ public class Step {
 
     @Expose
     private String description;
+
+    @Expose
+    private String videoURL;
+
+    @Expose
+    private String thumbnailURL;
 
     public int getRecipeId() {
         return recipeId;
@@ -69,11 +82,5 @@ public class Step {
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
     }
-
-    @Expose
-    private String videoURL;
-
-    @Expose
-    private String thumbnailURL;
 
 }

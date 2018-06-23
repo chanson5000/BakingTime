@@ -5,9 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.List;
-
-@Entity(tableName = "recipe")
+@Entity
 public class Recipe {
 
     @PrimaryKey
@@ -18,7 +16,10 @@ public class Recipe {
     private String name;
 
     @Expose
-    private List<Ingredient> ingredients;
+    private int servings;
+
+    @Expose
+    private String image;
 
     public int getId() {
         return id;
@@ -36,22 +37,6 @@ public class Recipe {
         this.name = name;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public List<Step> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
-    }
-
     public int getServings() {
         return servings;
     }
@@ -67,14 +52,5 @@ public class Recipe {
     public void setImage(String image) {
         this.image = image;
     }
-
-    @Expose
-    private List<Step> steps;
-
-    @Expose
-    private int servings;
-
-    @Expose
-    private String image;
 
 }

@@ -1,11 +1,19 @@
 package com.nverno.bakingtime.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "ingredient")
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(foreignKeys = @ForeignKey(
+        entity = Recipe.class,
+        parentColumns = "id",
+        childColumns = "recipeId",
+        onDelete = CASCADE))
 public class Ingredient {
 
     @PrimaryKey
@@ -17,6 +25,9 @@ public class Ingredient {
 
     @Expose
     private String measure;
+
+    @SerializedName("ingredient")
+    private String name;
 
     public int getRecipeId() {
         return recipeId;
@@ -42,15 +53,12 @@ public class Ingredient {
         this.measure = measure;
     }
 
-    public String getIngredients() {
-        return ingredients;
+    public String getName() {
+        return name;
     }
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
+    public void setName(String ingredient) {
+        this.name = ingredient;
     }
-
-    @Expose
-    private String ingredients;
 
 }
