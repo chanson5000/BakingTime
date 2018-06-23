@@ -18,9 +18,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Repository {
+public class RecipeRepository {
 
-    private static final String LOG_TAG = Repository.class.getSimpleName();
+    private static final String LOG_TAG = RecipeRepository.class.getSimpleName();
 
     private final RecipeDatabase recipeDatabase;
 
@@ -28,7 +28,7 @@ public class Repository {
 
     private static boolean databaseUpdated = false;
 
-    public Repository(Context context) {
+    public RecipeRepository(Context context) {
         recipeDatabase = RecipeDatabase.getInstance(context);
 
         mContext = context;
