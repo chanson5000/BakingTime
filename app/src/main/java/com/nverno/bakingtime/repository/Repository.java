@@ -1,15 +1,98 @@
 package com.nverno.bakingtime.repository;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.util.AppExecutors;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
 
-    boolean networkNotAvailable(Context context) {
+    private static final String LOG_TAG = Repository.class.getSimpleName();
+
+    private final RecipeDatabase recipeDatabase;
+
+    private final Context mContext;
+
+    private static boolean databaseUpdated = false;
+
+    public Repository(Context context) {
+        recipeDatabase = RecipeDatabase.getInstance(context);
+
+        mContext = context;
+
+        cacheWebData();
+    }
+
+    private void cacheWebData() {
+
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping data fetch, network not available.");
+            return;
+        }
+
+        if (databaseUpdated) {
+            Log.d(LOG_TAG, "Skipped data fetched, already fetched.");
+            return;
+        }
+
+        final RemoteData remoteData = getRemoteData(RemoteData.class);
+
+        Call<List<Recipe>> call = remoteData.recipes();
+
+        call.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Recipe>> call,
+                                   @NonNull Response<List<Recipe>> response) {
+                switch (response.code()) {
+                    case 404:
+                        Log.e(LOG_TAG, "Server return \"Not Found\" error.");
+                        break;
+                    case 200:
+                        final List<Recipe> recipes = response.body();
+
+                        Log.d(LOG_TAG, "Successfully fetched data.");
+
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                recipeDatabase.recipeDao().insertMany(recipes);
+                            }
+                        });
+
+                        databaseUpdated = true;
+                        break;
+                        default:
+                            Log.e(LOG_TAG, "Failed to fetch internet data.");
+                            break;
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e(LOG_TAG, "Failed to fetch internet data.");
+            }
+        });
+    }
+
+    public LiveData<List<Recipe>> getAll() {
+        return recipeDatabase.recipeDao().getAll();
+    }
+
+    private boolean networkNotAvailable(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -20,7 +103,7 @@ public class Repository {
         return networkInfo == null || !networkInfo.isConnectedOrConnecting();
     }
 
-    RemoteData remoteData(Class<RemoteData> remoteDataClass) {
+    private RemoteData getRemoteData(Class<RemoteData> remoteDataClass) {
         return buildRetrofit().create(remoteDataClass);
     }
 
@@ -30,6 +113,4 @@ public class Repository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
-
-
 }
