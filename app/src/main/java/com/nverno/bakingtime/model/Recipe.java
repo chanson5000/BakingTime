@@ -1,11 +1,13 @@
 package com.nverno.bakingtime.model;
 
+import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
+@Entity(tableName = "recipe")
 public class Recipe {
 
     @PrimaryKey
