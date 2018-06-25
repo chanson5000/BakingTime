@@ -33,10 +33,10 @@ public class RecipeRepository {
 
         mContext = context;
 
-        cacheWebData();
+        loadData();
     }
 
-    private void cacheWebData() {
+    private void loadData() {
 
         if (networkNotAvailable(mContext)) {
             Log.d(LOG_TAG, "Skipping data fetch, network not available.");
@@ -86,6 +86,10 @@ public class RecipeRepository {
                 Log.e(LOG_TAG, "Failed to fetch internet data.");
             }
         });
+    }
+
+    private void fillInBlanks() {
+
     }
 
     public LiveData<List<Recipe>> getAll() {
