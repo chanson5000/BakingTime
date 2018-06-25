@@ -101,7 +101,7 @@
       }
     ],
     "servings": 8,
-    "image": ""
+    "image": "http://images.honestcooking.com/wp-content/uploads/2013/09/p8010158.jpg"
   },
   {
     "id": 2,
@@ -231,7 +231,7 @@
       }
     ],
     "servings": 8,
-    "image": ""
+    "image": "https://cms.splendidtable.org/sites/default/files/styles/w2000/public/brownies.jpg?itok=1fSf4_OH"
   },
   {
     "id": 3,
@@ -382,7 +382,7 @@
       }
     ],
     "servings": 8,
-    "image": ""
+    "image": "https://d3cizcpymoenau.cloudfront.net/images/28462/SFS_yellow_layer_cake-195.jpg"
   },
   {
     "id": 4,
@@ -528,6 +528,6 @@
       }
     ],
     "servings": 8,
-    "image": ""
+    "image": "https://assets.marthastewart.com/styles/wmax-1500/d28/new-york-cheesecake-mhlb2030/new-york-cheesecake-mhlb2030_horiz.jpg?itok=OVfIi-EA"
   }
 ]
