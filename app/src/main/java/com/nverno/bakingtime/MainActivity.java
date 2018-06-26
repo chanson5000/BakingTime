@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -43,7 +44,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     private void initView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if (findViewById(R.id.is_sw600dp) != null) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
 
         mRecyclerView.setHasFixedSize(true);
 
