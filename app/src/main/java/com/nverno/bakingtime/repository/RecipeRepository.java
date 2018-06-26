@@ -7,9 +7,17 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.util.AppExecutors;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -68,15 +76,15 @@ public class RecipeRepository {
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                recipeDatabase.recipeDao().insertMany(recipes);
+                                recipeDatabase.recipeDao().insertMany(fillInBlanks(recipes));
                             }
                         });
 
                         databaseUpdated = true;
                         break;
-                        default:
-                            Log.e(LOG_TAG, "Failed to fetch internet data.");
-                            break;
+                    default:
+                        Log.e(LOG_TAG, "Failed to fetch internet data.");
+                        break;
                 }
             }
 
@@ -88,8 +96,41 @@ public class RecipeRepository {
         });
     }
 
-    private void fillInBlanks() {
+    private List<Recipe> fillInBlanks(List<Recipe> recipes) {
+        String localRecipeData;
+        try {
+            InputStream is = mContext.getAssets().open("baking.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            localRecipeData = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
 
+        try {
+            JSONArray jsonArray = new JSONArray(localRecipeData);
+
+            int length = jsonArray.length();
+
+            for (int i = 0; i < length; i++) {
+                JSONObject jsonRecipe = jsonArray.getJSONObject(i);
+
+                for (Recipe recipe : recipes) {
+                    if (recipe.getId() == jsonRecipe.getInt("id")) {
+                        recipe.setImage(jsonRecipe.getString("image"));
+                    }
+                }
+            }
+
+            return recipes;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public LiveData<List<Recipe>> getAll() {
@@ -100,7 +141,9 @@ public class RecipeRepository {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        if (cm == null) { return true; }
+        if (cm == null) {
+            return true;
+        }
 
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
