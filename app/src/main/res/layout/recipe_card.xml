@@ -21,7 +21,7 @@
                 android:id="@+id/recipe_card_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:contentDescription="Just an image"
+                android:contentDescription="@string/dessert_image_content_description"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center" />
 
