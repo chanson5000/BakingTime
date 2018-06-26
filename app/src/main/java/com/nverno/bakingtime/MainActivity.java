@@ -36,6 +36,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initView();
+
+        initViewModel();
+
+    }
+
+    private void initView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mRecyclerView.setHasFixedSize(true);
@@ -43,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         mRecipeCardAdapter = new RecipeCardAdapter(this, this);
 
         mRecyclerView.setAdapter(mRecipeCardAdapter);
-
-        initViewModel();
     }
 
     private void initViewModel() {
