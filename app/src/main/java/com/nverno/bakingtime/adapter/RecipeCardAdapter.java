@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.model.Recipe;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
@@ -21,8 +23,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     private final RecipeCardAdapterOnClickHandler mClickHandler;
 
-    private TextView textView;
-
     public RecipeCardAdapter(Context context, RecipeCardAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
@@ -31,9 +31,13 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public class RecipeCardAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
+        final TextView textView;
+        final ImageView imageView;
+
         RecipeCardAdapterViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.recipe_card_text);
+            imageView = view.findViewById(R.id.recipe_card_image);
             view.setOnClickListener(this);
         }
 
@@ -59,7 +63,13 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeCardAdapterViewHolder recipeCardAdapterViewHolder, int position) {
-        textView.setText(recipes.get(position).getName());
+        recipeCardAdapterViewHolder.textView.setText(recipes.get(position).getName());
+        String imageToInsert = recipes.get(position).getImage();
+        if (!imageToInsert.isEmpty()) {
+            Picasso.with(mContext).load(imageToInsert).resize(500,200)
+                    .centerCrop()
+                    .into(recipeCardAdapterViewHolder.imageView);
+        }
     }
 
     @Override
