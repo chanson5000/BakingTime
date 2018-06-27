@@ -21,9 +21,9 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     private final Context mContext;
     private List<Recipe> recipes;
 
-    private final RecipeCardAdapterOnClickHandler mClickHandler;
+    private final RecipeCardOnClickHandler mClickHandler;
 
-    public RecipeCardAdapter(Context context, RecipeCardAdapterOnClickHandler clickHandler) {
+    public RecipeCardAdapter(Context context, RecipeCardOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
     }
@@ -45,7 +45,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
             Recipe recipe = recipes.get(adapterPosition);
-            mClickHandler.onClick(recipe);
+            mClickHandler.onCardClick(recipe);
         }
     }
 
