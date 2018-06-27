@@ -2,6 +2,7 @@ package com.nverno.bakingtime;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     private RecipeCardAdapter mRecipeCardAdapter;
 
-    private RecipeViewModel recipeViewModel;
+    private static final String RECIPE_ID = "RECIPE_ID";
 
     @BindView(R.id.recipe_card_recycler_view)
     RecyclerView mRecyclerView;
@@ -40,11 +41,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         initView();
 
         initViewModel();
-
     }
 
     private void initView() {
-
         if (findViewById(R.id.is_sw600dp) != null) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         } else {
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     private void initViewModel() {
-        recipeViewModel = ViewModelProviders.of(this)
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
         recipeViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
@@ -74,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @Override
     public void onClick(Recipe recipe) {
+        final Intent intent = new Intent(this, RecipeDetailActivity.class);
 
-        Toast.makeText(this, "You clicked the thing.", Toast.LENGTH_SHORT).show();
+        intent.putExtra(RECIPE_ID, recipe.getId());
+        startActivity(intent);
     }
 }
