@@ -1,7 +1,9 @@
 package com.nverno.bakingtime.adapter;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +17,11 @@ import java.util.List;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsAdapterViewHolder> {
 
-    private final Context mContext;
     private List<Step> steps;
 
-    private final RecipeStepsAdapterOnClickHandler mClickHandler;
+    private OnClickHandler mClickHandler;
 
-    public interface RecipeStepsAdapterOnClickHandler {
-        void onClick(Step step);
-    }
-
-    public RecipeStepsAdapter(Context context, RecipeStepsAdapterOnClickHandler clickHandler) {
-        mContext = context;
+    public RecipeStepsAdapter(OnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
@@ -52,7 +48,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @NonNull
     public RecipeStepsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         int layoutId = R.layout.recipe_step_description;
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = inflater.inflate(layoutId, viewGroup, false);
 
