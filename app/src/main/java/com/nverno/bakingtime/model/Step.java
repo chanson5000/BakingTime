@@ -11,7 +11,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(
         entity = Recipe.class,
-        parentColumns = "io",
+        parentColumns = "id",
         childColumns = "recipeId",
         onDelete = CASCADE))
 public class Step {
