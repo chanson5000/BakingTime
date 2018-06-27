@@ -7,8 +7,9 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.util.AppExecutors;
 
 import org.json.JSONArray;
@@ -17,7 +18,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -71,14 +71,38 @@ public class RecipeRepository {
                     case 200:
                         final List<Recipe> recipes = response.body();
 
+                        final List<Recipe> modRecipes = fillInBlanks(recipes);
                         Log.d(LOG_TAG, "Successfully fetched data.");
 
                         AppExecutors.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                recipeDatabase.recipeDao().insertMany(fillInBlanks(recipes));
+                                recipeDatabase.recipeDao().insertMany(fillInBlanks(modRecipes));
                             }
                         });
+
+                        for (Recipe recipe : recipes) {
+
+                            final List<Ingredient> ingredients = recipe.getIngredients();
+
+                            final List<Step> steps = recipe.getSteps();
+
+                            for (Ingredient ingredient : ingredients) {
+                                ingredient.setRecipeId(recipe.getId());
+                            }
+
+                            for (Step step : steps) {
+                                step.setRecipeId(recipe.getId());
+                            }
+
+                            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recipeDatabase.ingredientDao().insertMany(ingredients);
+                                    recipeDatabase.stepDao().insertMany(steps);
+                                }
+                            });
+                        }
 
                         databaseUpdated = true;
                         break;
@@ -137,6 +161,14 @@ public class RecipeRepository {
         return recipeDatabase.recipeDao().getAll();
     }
 
+    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeId) {
+        return recipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
+    }
+
+    public LiveData<List<Ingredient>> getAllIngredients() {
+        return recipeDatabase.ingredientDao().getAll();
+    }
+
     private boolean networkNotAvailable(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -160,4 +192,5 @@ public class RecipeRepository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
+
 }
