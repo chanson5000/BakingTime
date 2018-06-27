@@ -15,7 +15,7 @@ public class StepViewModel extends AndroidViewModel {
 
     private LiveData<List<Step>> steps;
 
-    StepRepository stepRepository;
+    private StepRepository stepRepository;
 
     public StepViewModel(@NonNull Application app) {
         super(app);
@@ -25,7 +25,7 @@ public class StepViewModel extends AndroidViewModel {
         steps = new MutableLiveData<>();
     }
 
-    public LiveData<List<Step>> stepsForRecipe() {
+    public LiveData<List<Step>> getStepsForRecipe() {
         return steps;
     }
 
