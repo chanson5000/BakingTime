@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<fragment
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/steps_list_fragment"
+    android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-</FrameLayout>
+    android:layout_height="match_parent" />
