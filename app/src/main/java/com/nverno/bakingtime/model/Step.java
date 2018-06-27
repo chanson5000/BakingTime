@@ -16,7 +16,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class Step {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int uniqueId;
+
     @Expose
     private int recipeId;
 
@@ -83,4 +85,11 @@ public class Step {
         this.thumbnailURL = thumbnailURL;
     }
 
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 }

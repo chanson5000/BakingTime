@@ -1,9 +1,13 @@
 package com.nverno.bakingtime.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Recipe {
@@ -20,6 +24,30 @@ public class Recipe {
 
     @Expose
     private String image;
+
+    @Expose
+    @Ignore
+    private List<Ingredient> ingredients;
+
+    @Expose
+    @Ignore
+    private List<Step> steps;
+
+    public List<Ingredient> getIngredients() {
+        if (ingredients == null) {
+            ingredients = new ArrayList<>();
+        }
+
+        return ingredients;
+    }
+
+    public List<Step> getSteps() {
+        if (steps == null) {
+            steps = new ArrayList<>();
+        }
+
+        return steps;
+    }
 
     public int getId() {
         return id;

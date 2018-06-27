@@ -16,7 +16,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class Ingredient {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int uniqueId;
+
     @Expose
     private int recipeId;
 
@@ -61,4 +63,11 @@ public class Ingredient {
         this.name = ingredient;
     }
 
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 }
