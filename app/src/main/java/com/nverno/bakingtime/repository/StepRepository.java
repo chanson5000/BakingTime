@@ -19,8 +19,6 @@ public class StepRepository {
         stepDatabase = StepDatabase.getInstance(context);
 
         mContext = context;
-
-
     }
 
     public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
