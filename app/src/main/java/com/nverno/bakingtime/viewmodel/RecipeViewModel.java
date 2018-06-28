@@ -8,25 +8,36 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
+import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.repository.RecipeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeViewModel extends AndroidViewModel {
 
     private final LiveData<List<Recipe>> recipes;
+    private final LiveData<List<Ingredient>> ingredients;
 
     private LiveData<Recipe> selectedRecipe;
+    private LiveData<List<Step>> selectedRecipeSteps;
+    private LiveData<List<Ingredient>> selectedRecipeIngredients;
+
+    RecipeRepository recipeRepository;
 
     public RecipeViewModel(@NonNull Application app) {
         super(app);
 
-        RecipeRepository recipeRepository = new RecipeRepository(this.getApplication());
+        recipeRepository = new RecipeRepository(this.getApplication());
 
         recipes = recipeRepository.getAll();
+        ingredients = recipeRepository.getAllIngredients();
 
         selectedRecipe = new MediatorLiveData<>();
+        selectedRecipeSteps = new MediatorLiveData<>();
+        selectedRecipeIngredients = new MediatorLiveData<>();
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -35,6 +46,14 @@ public class RecipeViewModel extends AndroidViewModel {
 
     public LiveData<Recipe> getSelectedRecipe() {
         return selectedRecipe;
+    }
+
+    public LiveData<List<Step>> getSelectedRecipeSteps() {
+        return selectedRecipeSteps;
+    }
+
+    public LiveData<List<Ingredient>> getSelectedRecipeIngredients() {
+        return selectedRecipeIngredients;
     }
 
     public void setSelectedRecipe(final int recipeId) {
@@ -47,6 +66,22 @@ public class RecipeViewModel extends AndroidViewModel {
                     }
                 }
                 return null;
+            }
+        });
+
+        selectedRecipeIngredients = Transformations.map(ingredients, new Function<List<Ingredient>, List<Ingredient>>() {
+            @Override
+            public List<Ingredient> apply(List<Ingredient> ingredients) {
+
+                List<Ingredient> selectedIngredients = new ArrayList<>();
+
+                for (Ingredient ingredient : ingredients) {
+                    if (ingredient.getRecipeId() == recipeId) {
+                        selectedIngredients.add(ingredient);
+                    }
+                }
+
+                return selectedIngredients;
             }
         });
     }
