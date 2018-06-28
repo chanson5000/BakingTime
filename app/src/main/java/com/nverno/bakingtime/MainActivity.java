@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity
         initView();
 
         initViewModel();
+
+
     }
 
     private void initView() {
