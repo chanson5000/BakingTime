@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,12 +29,10 @@ public class RecipeStepsFragment extends Fragment
 
     private RecipeStepOnClickHandler mClickHandler;
     private Context mContext;
-    RecipeViewModel recipeViewModel;
+    private RecipeViewModel recipeViewModel;
 
     private RecyclerView mRecyclerView;
     private RecipeStepsAdapter mStepsAdapter;
-
-    private static final String RECIPE_ID = "RECIPE_ID";
 
     private TextView mTextIngredients;
 
@@ -43,21 +42,21 @@ public class RecipeStepsFragment extends Fragment
 
         mContext = context;
 
-
         try {
             mClickHandler = (RecipeStepOnClickHandler) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement RecipeStepOnClickHandler");
         }
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        if (getActivity() != null) {
+            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        }
     }
 
     public RecipeStepsFragment() {
@@ -67,31 +66,9 @@ public class RecipeStepsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-
         final View rootView = inflater.inflate(R.layout.recipe_steps_fragment, container, false);
 
         mTextIngredients = rootView.findViewById(R.id.recipe_steps_ingredients);
-
-        recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
-            @Override
-            public void onChanged(@Nullable List<Ingredient> ingredients) {
-                if (ingredients != null && !ingredients.isEmpty()) {
-                    StringBuilder ingredientString = new StringBuilder();
-
-                    for (int i = 0; i < ingredients.size(); i++) {
-                        if (i == ingredients.size() - 1) {
-                            ingredientString.append(ingredients.get(i).getName()).append(".");
-                        }
-                        ingredientString.append(ingredients.get(i).getName()).append(", ");
-                    }
-
-                    String textToSet = ingredientString.toString();
-
-                    mTextIngredients.setText(textToSet);
-                }
-            }
-        });
 
         mRecyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
 
@@ -104,6 +81,32 @@ public class RecipeStepsFragment extends Fragment
         mRecyclerView.setAdapter(mStepsAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                if (ingredients != null && !ingredients.isEmpty()) {
+                    StringBuilder ingredientString = new StringBuilder();
+
+                    for (int i = 0; i < ingredients.size(); i++) {
+                        if (i == ingredients.size() - 1) {
+                            ingredientString.append(ingredients.get(i).getName()).append(".");
+                        } else {
+                            ingredientString.append(ingredients.get(i).getName()).append(", ");
+                        }
+                    }
+
+                    String textToSet = ingredientString.toString();
+
+                    mTextIngredients.setText(textToSet);
+                }
+            }
+        });
     }
 
     public void onStepClick(Step step) {

@@ -6,21 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
-import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
-import com.nverno.bakingtime.ui.RecipeStepsFragment;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 
 public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeStepOnClickHandler {
 
-    private static Recipe mRecipe;
-    private static int mRecipeId;
-
     private static final String RECIPE_ID = "RECIPE_ID";
-
-    RecipeStepsFragment recipeStepsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +21,6 @@ public class RecipeDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_recipe_detail);
 
         Intent parentIntent = getIntent();
-
-        recipeStepsFragment = new RecipeStepsFragment();
 
         if (parentIntent != null
                 && parentIntent.hasExtra(RECIPE_ID)) {
@@ -43,7 +34,6 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     private void initViewModel(int recipeId) {
-
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
