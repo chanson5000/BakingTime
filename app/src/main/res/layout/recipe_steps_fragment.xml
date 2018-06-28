@@ -9,7 +9,13 @@
     <TextView
         android:id="@+id/recipe_steps_ingredients"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_steps_recycler_view"
