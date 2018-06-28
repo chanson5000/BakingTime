@@ -6,9 +6,11 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
+import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.model.Step;
 
-@Database(entities = {Recipe.class}, version = 1, exportSchema = false)
+@Database(entities = {Recipe.class, Step.class, Ingredient.class}, version = 1, exportSchema = false)
 public abstract class RecipeDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = RecipeDatabase.class.getSimpleName();
@@ -30,5 +32,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
     }
 
     public abstract RecipeDao recipeDao();
+    public abstract StepDao stepDao();
+    public abstract IngredientDao ingredientDao();
 
 }
