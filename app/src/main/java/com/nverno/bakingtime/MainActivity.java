@@ -11,7 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.nverno.bakingtime.adapter.RecipeCardAdapter;
-import com.nverno.bakingtime.adapter.RecipeCardAdapterOnClickHandler;
+import com.nverno.bakingtime.adapter.RecipeCardOnClickHandler;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
@@ -20,7 +20,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements RecipeCardAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity
+        implements RecipeCardOnClickHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     @Override
-    public void onClick(Recipe recipe) {
+    public void onCardClick(Recipe recipe) {
         final Intent intent = new Intent(this, RecipeDetailActivity.class);
 
         intent.putExtra(RECIPE_ID, recipe.getId());
