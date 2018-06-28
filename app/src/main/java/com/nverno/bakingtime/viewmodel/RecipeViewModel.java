@@ -26,6 +26,7 @@ public class RecipeViewModel extends AndroidViewModel {
     private LiveData<Recipe> selectedRecipe;
     private LiveData<List<Step>> selectedRecipeSteps;
     private LiveData<List<Ingredient>> selectedRecipeIngredients;
+    private LiveData<Step> selectedRecipeStep;
 
     private RecipeRepository recipeRepository;
 
@@ -40,6 +41,7 @@ public class RecipeViewModel extends AndroidViewModel {
 
         selectedRecipe = new MediatorLiveData<>();
         selectedRecipeSteps = new MediatorLiveData<>();
+        selectedRecipeStep = new MediatorLiveData<>();
         selectedRecipeIngredients = new MediatorLiveData<>();
     }
 
@@ -93,6 +95,24 @@ public class RecipeViewModel extends AndroidViewModel {
 //        });
 
         selectedRecipeSteps = recipeRepository.getStepsForRecipe(recipeId);
+    }
+
+    public void setSelectedRecipeStep(final int recipeStepId) {
+        selectedRecipeStep = Transformations.map(selectedRecipeSteps, new Function<List<Step>, Step>() {
+            @Override
+            public Step apply(List<Step> steps) {
+                for (Step step : steps) {
+                    if (step.getStep() == recipeStepId) {
+                        return step;
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
+    public LiveData<Step> getSelectedRecipeStep() {
+        return selectedRecipeStep;
     }
 
 }
