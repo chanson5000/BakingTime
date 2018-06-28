@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -93,6 +92,8 @@ public class RecipeStepsFragment extends Fragment
                 if (ingredients != null && !ingredients.isEmpty()) {
                     StringBuilder ingredientString = new StringBuilder();
 
+                    ingredientString.append("Ingredients: ");
+
                     for (int i = 0; i < ingredients.size(); i++) {
                         if (i == ingredients.size() - 1) {
                             ingredientString.append(ingredients.get(i).getName()).append(".");
@@ -107,6 +108,17 @@ public class RecipeStepsFragment extends Fragment
                 }
             }
         });
+
+        recipeViewModel.getSelectedRecipeSteps().observe(this, new Observer<List<Step>>() {
+            @Override
+            public void onChanged(@Nullable List<Step> steps) {
+                if (steps != null && !steps.isEmpty()) {
+                    mStepsAdapter.setStepsData(steps);
+                }
+            }
+        });
+
+
     }
 
     public void onStepClick(Step step) {
