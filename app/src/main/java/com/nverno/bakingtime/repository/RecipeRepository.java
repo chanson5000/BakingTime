@@ -169,6 +169,10 @@ public class RecipeRepository {
         return recipeDatabase.ingredientDao().getAll();
     }
 
+    public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
+        return recipeDatabase.stepDao().getStepsForRecipe(recipeId);
+    }
+
     private boolean networkNotAvailable(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
