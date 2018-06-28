@@ -3,10 +3,14 @@ package com.nverno.bakingtime;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.model.Step;
+import com.nverno.bakingtime.ui.RecipeStepDetailFragment;
+import com.nverno.bakingtime.ui.RecipeStepsFragment;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 
@@ -14,6 +18,15 @@ public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeStepOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
+
+    private boolean mTwoPane;
+
+    private RecipeViewModel recipeViewModel;
+
+    FragmentManager fragmentManager;
+
+    Fragment mRecipeStepDetailFragment;
+    Fragment mRecipeStepsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +44,19 @@ public class RecipeDetailActivity extends AppCompatActivity
                 initViewModel(bundle.getInt(RECIPE_ID));
             }
         }
+
+        fragmentManager = getSupportFragmentManager();
+
+        mRecipeStepDetailFragment = new RecipeStepDetailFragment();
+        mRecipeStepsFragment = new RecipeStepsFragment();
+
+        if (findViewById(R.id.step_detail_fragment) != null) {
+            mTwoPane = true;
+        }
     }
 
     private void initViewModel(int recipeId) {
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this)
+        recipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
         recipeViewModel.setSelectedRecipe(recipeId);
@@ -42,5 +64,12 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     public void onStepClick(Step step) {
 
+        if (!mTwoPane) {
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .hide(mRecipeStepsFragment)
+                    .show(mRecipeStepDetailFragment)
+                    .commit();
+        }
     }
 }
