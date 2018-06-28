@@ -65,7 +65,9 @@ public class RecipeStepsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.recipe_steps_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.recipe_steps_fragment,
+                container,
+                false);
 
         mTextIngredients = rootView.findViewById(R.id.recipe_steps_ingredients);
 
@@ -86,6 +88,11 @@ public class RecipeStepsFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initViewModel();
+
+    }
+
+    private void initViewModel() {
         recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
@@ -117,12 +124,11 @@ public class RecipeStepsFragment extends Fragment
                 }
             }
         });
-
-
     }
 
     public void onStepClick(Step step) {
+        recipeViewModel.setSelectedRecipeStep(step.getStep());
+
 
     }
-
 }
