@@ -37,10 +37,9 @@ public class RecipeStepDetailFragment extends Fragment {
 
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    private TextView mTextRecipeStepDescription;
+    private TextView mTextRecipeStepInstruction;
     private ImageView mImageRecipeStep;
     private TextView mNoMedia;
-
 
     @Override
     public void onAttach(Context context) {
@@ -70,7 +69,7 @@ public class RecipeStepDetailFragment extends Fragment {
                 false);
 
         mPlayerView = rootView.findViewById(R.id.recipe_step_media);
-        mTextRecipeStepDescription = rootView.findViewById(R.id.recipe_step_instructions);
+        mTextRecipeStepInstruction = rootView.findViewById(R.id.recipe_step_instructions);
         mImageRecipeStep = rootView.findViewById(R.id.recipe_step_image);
         mNoMedia = rootView.findViewById(R.id.recipe_no_media);
 
@@ -81,23 +80,22 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
         recipeViewModel.getSelectedRecipeStep().observe(this, new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
                 if (step != null) {
-                    if (!step.getVideoURL().isEmpty()) {
-                        playerVisible();
-                        initializePlayer(Uri.parse(step.getVideoURL()));
-                    } else if (!step.getThumbnailURL().isEmpty()) {
-                        imageVisible();
-                        Picasso.with(getContext()).load(step.getThumbnailURL())
-                                .into(mImageRecipeStep);
-                    } else {
-                        noMedia();
-                    }
+//                    if (!step.getVideoURL().isEmpty()) {
+//                        playerVisible();
+//                        initializePlayer(Uri.parse(step.getVideoURL()));
+//                    } else if (!step.getThumbnailURL().isEmpty()) {
+//                        imageVisible();
+//                        Picasso.with(getContext()).load(step.getThumbnailURL())
+//                                .into(mImageRecipeStep);
+//                    } else {
+//                        noMedia();
+//                    }
 
-                    mTextRecipeStepDescription.setText(step.getDescription());
+                    mNoMedia.setText(step.getDescription());
                 }
             }
         });
@@ -123,8 +121,8 @@ public class RecipeStepDetailFragment extends Fragment {
 
     private void initializePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
-            // Create an instance of the ExoPlayer.
 
+            // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
 
@@ -137,15 +135,14 @@ public class RecipeStepDetailFragment extends Fragment {
             // Prepare the media resource.
             String userAgent = Util.getUserAgent(getActivity(), "RecipeStepMedia");
 
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getActivity(), userAgent),
-                    new DefaultExtractorsFactory(),
-                    null,
-                    null);
+            if (getActivity() != null) {
+                MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
+                        new DefaultDataSourceFactory(getActivity(), userAgent),
+                        new DefaultExtractorsFactory(), null, null);
 
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
-
+                mExoPlayer.prepare(mediaSource);
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
