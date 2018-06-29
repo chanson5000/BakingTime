@@ -50,7 +50,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         mRecipeStepDetailFragment = new RecipeStepDetailFragment();
         mRecipeStepsFragment = new RecipeStepsFragment();
 
-        if (findViewById(R.id.step_detail_fragment) != null) {
+        if (findViewById(R.id.wide_layout_divider) != null) {
             mTwoPane = true;
         }
     }
