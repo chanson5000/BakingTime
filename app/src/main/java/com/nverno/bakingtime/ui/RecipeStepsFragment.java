@@ -18,6 +18,7 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
 import com.nverno.bakingtime.model.Ingredient;
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
@@ -32,6 +33,7 @@ public class RecipeStepsFragment extends Fragment
 
     private RecyclerView mRecyclerView;
     private RecipeStepsAdapter mStepsAdapter;
+    private Recipe mRecipe;
 
     private TextView mTextIngredients;
 
@@ -53,9 +55,7 @@ public class RecipeStepsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getActivity() != null) {
-            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-        }
+
     }
 
     public RecipeStepsFragment() {
@@ -77,7 +77,7 @@ public class RecipeStepsFragment extends Fragment
 
         mRecyclerView.setHasFixedSize(true);
 
-        mStepsAdapter = new RecipeStepsAdapter(mClickHandler);
+        mStepsAdapter = new RecipeStepsAdapter(this);
 
         mRecyclerView.setAdapter(mStepsAdapter);
 
@@ -89,10 +89,21 @@ public class RecipeStepsFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         initViewModel();
-
     }
 
     private void initViewModel() {
+        if (getActivity() != null) {
+            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        }
+        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe recipe) {
+                if (recipe != null) {
+                    mRecipe = recipe;
+                }
+            }
+        });
+
         recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
@@ -128,7 +139,5 @@ public class RecipeStepsFragment extends Fragment
 
     public void onStepClick(Step step) {
         recipeViewModel.setSelectedRecipeStep(step.getStep());
-
-
     }
 }
