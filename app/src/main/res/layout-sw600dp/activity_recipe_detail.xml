@@ -7,21 +7,21 @@
     tools:context="com.nverno.bakingtime.RecipeDetailActivity">
 
     <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/steps_list_fragment"
         android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent" />
 
     <View
+        android:id="@+id/wide_layout_divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray" />
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/step_detail_fragment"
-        android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment" />
+        android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
