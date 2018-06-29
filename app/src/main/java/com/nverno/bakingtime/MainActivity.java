@@ -24,10 +24,9 @@ public class MainActivity extends AppCompatActivity
         implements RecipeCardOnClickHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String RECIPE_ID = "RECIPE_ID";
 
     private RecipeCardAdapter mRecipeCardAdapter;
-
-    private static final String RECIPE_ID = "RECIPE_ID";
 
     @BindView(R.id.recipe_card_recycler_view)
     RecyclerView mRecyclerView;
@@ -39,14 +38,11 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         initView();
-
         initViewModel();
-
-
     }
 
     private void initView() {
-        if (findViewById(R.id.is_sw600dp) != null) {
+        if (findViewById(R.id.wide_layout_divider) != null) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
