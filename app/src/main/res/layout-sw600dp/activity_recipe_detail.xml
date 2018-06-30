@@ -8,69 +8,66 @@
     tools:context="com.nverno.bakingtime.RecipeDetailActivity">
 
     <fragment
-        android:id="@+id/step_media_fragment"
+        android:id="@+id/fragment_step_media"
         android:name="com.nverno.bakingtime.ui.RecipeMediaFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/divider_horizontal_constraint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/wide_layout_horizontal_divider"
         tools:layout="@layout/fragment_step_media" />
 
     <View
-        android:id="@+id/wide_layout_horizontal_divider"
+        android:id="@+id/divider_horizontal_constraint"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@id/bottom_fragments_container"
+        app:layout_constraintBottom_toTopOf="@id/constraint_container_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step_media_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/fragment_step_media" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/bottom_fragments_container"
+        android:id="@+id/constraint_container_bottom"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step_media_fragment"
-        >
+        app:layout_constraintTop_toBottomOf="@id/fragment_step_media">
 
         <fragment
-            android:id="@+id/steps_list_fragment"
+            android:id="@+id/fragment_steps_list"
             android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
             android:layout_width="250dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/divider_vertical_constraint"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/wide_layout_vertical_divider"
-            tools:layout="@layout/fragment_steps_list"
-            />
+            tools:layout="@layout/fragment_steps_list" />
 
         <View
-            android:id="@+id/wide_layout_vertical_divider"
+            android:id="@+id/divider_vertical_constraint"
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/step_detail_fragment"
-            app:layout_constraintStart_toEndOf="@id/steps_list_fragment"
+            app:layout_constraintEnd_toStartOf="@id/fragment_step_detail"
+            app:layout_constraintStart_toEndOf="@id/fragment_steps_list"
             app:layout_constraintTop_toTopOf="parent" />
 
         <fragment
-            android:id="@+id/step_detail_fragment"
+            android:id="@+id/fragment_step_detail"
             android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/wide_layout_vertical_divider"
+            app:layout_constraintStart_toEndOf="@id/divider_vertical_constraint"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_step_detail"
-            />
+            tools:layout="@layout/fragment_step_detail" />
 
     </android.support.constraint.ConstraintLayout>
 
