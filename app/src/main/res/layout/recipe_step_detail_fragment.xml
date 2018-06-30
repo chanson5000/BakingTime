@@ -7,41 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/recipe_step_detail_frame"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recipe_step_instructions"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/recipe_no_media"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/dessert_image_content_description"
-            android:textAlignment="center"
-            android:textSize="26sp" />
-
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/recipe_step_media"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/dessert_image_content_description"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/recipe_step_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/dessert_image_content_description"
-            android:visibility="invisible" />
-
-    </FrameLayout>
-
     <TextView
         android:id="@+id/recipe_step_instructions"
         android:layout_width="0dp"
@@ -51,7 +16,7 @@
         android:gravity="center"
         android:textAlignment="center"
         android:text="Test Text"
-        app:layout_constraintTop_toBottomOf="@id/recipe_step_detail_frame"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/nested_constraint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

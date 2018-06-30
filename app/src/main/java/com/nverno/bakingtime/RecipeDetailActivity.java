@@ -50,7 +50,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         mRecipeStepDetailFragment = new RecipeStepDetailFragment();
         mRecipeStepsFragment = new RecipeStepsFragment();
 
-        if (findViewById(R.id.wide_layout_divider) != null) {
+        if (findViewById(R.id.wide_layout_vertical_divider) != null) {
             mTwoPane = true;
         }
     }
@@ -60,6 +60,10 @@ public class RecipeDetailActivity extends AppCompatActivity
                 .get(RecipeViewModel.class);
 
         recipeViewModel.setSelectedRecipe(recipeId);
+
+        if (recipeViewModel.getSelectedRecipeStep().getValue() == null) {
+            recipeViewModel.setSelectedRecipeStep(0);
+        }
     }
 
     public void onStepClick(Step step) {

@@ -1,27 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     tools:context="com.nverno.bakingtime.RecipeDetailActivity">
 
     <fragment
-        android:id="@+id/steps_list_fragment"
-        android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
-        android:layout_width="250dp"
-        android:layout_height="match_parent" />
+        android:id="@+id/step_media_fragment"
+        android:name="com.nverno.bakingtime.ui.RecipeMediaFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/wide_layout_horizontal_divider"
+        tools:layout="@layout/recipe_step_media_fragment" />
 
     <View
-        android:id="@+id/wide_layout_divider"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray" />
+        android:id="@+id/wide_layout_horizontal_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/bottom_fragments_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_media_fragment" />
 
-    <fragment
-        android:id="@+id/step_detail_fragment"
-        android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_fragments_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_media_fragment"
+        >
 
-</LinearLayout>
+        <fragment
+            android:id="@+id/steps_list_fragment"
+            android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
+            android:layout_width="250dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/wide_layout_vertical_divider"
+            tools:layout="@layout/recipe_steps_fragment"
+            />
+
+        <View
+            android:id="@+id/wide_layout_vertical_divider"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/step_detail_fragment"
+            app:layout_constraintStart_toEndOf="@id/steps_list_fragment"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <fragment
+            android:id="@+id/step_detail_fragment"
+            android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/wide_layout_vertical_divider"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout="@layout/recipe_step_detail_fragment"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
