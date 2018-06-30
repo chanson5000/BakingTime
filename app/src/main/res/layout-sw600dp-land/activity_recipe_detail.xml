@@ -8,24 +8,24 @@
     tools:context="com.nverno.bakingtime.RecipeDetailActivity">
 
     <fragment
-        android:id="@+id/steps_list_fragment"
+        android:id="@+id/fragment_steps_list"
         android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
         android:layout_width="250dp"
         android:layout_height="0dp"
-        tools:layout="@layout/recipe_steps_fragment"
+        tools:layout="@layout/fragment_steps_list"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/wide_layout_vertical_divider"
+        app:layout_constraintEnd_toStartOf="@id/divider_vertical_constraint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/wide_layout_vertical_divider"
+        android:id="@+id/divider_vertical_constraint"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/side_fragments_container"
-        app:layout_constraintStart_toEndOf="@id/steps_list_fragment"
+        app:layout_constraintStart_toEndOf="@id/fragment_steps_list"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
@@ -34,43 +34,43 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/wide_layout_vertical_divider"
+        app:layout_constraintStart_toEndOf="@id/divider_vertical_constraint"
         app:layout_constraintTop_toTopOf="parent">
 
         <fragment
-            android:id="@+id/step_media_fragment"
+            android:id="@+id/fragment_step_media"
             android:name="com.nverno.bakingtime.ui.RecipeMediaFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintHeight_min="100dp"
-            tools:layout="@layout/recipe_step_media_fragment"
-            app:layout_constraintBottom_toTopOf="@id/wide_layout_horizontal_divider"
+            tools:layout="@layout/fragment_step_media"
+            app:layout_constraintBottom_toTopOf="@id/divider_horizontal_constraint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
         <View
-            android:id="@+id/wide_layout_horizontal_divider"
+            android:id="@+id/divider_horizontal_constraint"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/step_media_fragment"
+            app:layout_constraintTop_toBottomOf="@id/fragment_step_media"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/step_detail_fragment"
+            app:layout_constraintBottom_toTopOf="@id/fragment_step_detail"
             />
 
         <fragment
-            android:id="@+id/step_detail_fragment"
+            android:id="@+id/fragment_step_detail"
             android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            tools:layout="@layout/recipe_step_detail_fragment"
+            tools:layout="@layout/fragment_step_detail"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wide_layout_horizontal_divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider_horizontal_constraint" />
 
     </android.support.constraint.ConstraintLayout>
 

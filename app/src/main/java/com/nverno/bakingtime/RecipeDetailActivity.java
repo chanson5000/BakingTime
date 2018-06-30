@@ -19,6 +19,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeStepOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
+    private static final String STEP_ID = "STEP_ID";
 
     private boolean mSmallLayout;
 
@@ -54,11 +55,9 @@ public class RecipeDetailActivity extends AppCompatActivity
         mRecipeMediaFragment = new RecipeMediaFragment();
 
 
-        if (findViewById(R.id.step_extras_layout) != null) {
+        if (findViewById(R.id.divider_vertical_constraint) != null) {
             mSmallLayout = true;
         }
-
-
 
     }
 
@@ -97,6 +96,17 @@ public class RecipeDetailActivity extends AppCompatActivity
                     .show(mRecipeMediaFragment)
                     .show(mRecipeStepDetailFragment)
                     .commit();
+
+            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+
+//            Step selectedRecipeStep = recipeViewModel.getSelectedRecipeStep().getValue();
+
+            if (step != null) {
+                intent.putExtra(RECIPE_ID, step.getRecipeId());
+                intent.putExtra(STEP_ID, step.getStep());
+            }
+
+            startActivity(intent);
         }
     }
 }

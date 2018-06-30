@@ -76,6 +76,9 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
     public void setSelectedRecipeStep(final int recipeStepId) {
+        if (selectedRecipeStep == null) {
+            selectedRecipeStep = new MediatorLiveData<>();
+        }
         selectedRecipeStep.removeSource(selectedRecipeSteps);
         selectedRecipeStep.addSource(selectedRecipeSteps, new Observer<List<Step>>() {
                     @Override
