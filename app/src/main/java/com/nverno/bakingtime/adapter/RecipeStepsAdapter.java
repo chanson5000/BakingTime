@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsAdapterViewHolder> {
 
-    private List<Step> steps;
+    private List<Step> mSteps;
 
     private RecipeStepOnClickHandler mClickHandler;
 
@@ -37,7 +37,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            Step step = steps.get(adapterPosition);
+            Step step = mSteps.get(adapterPosition);
             mClickHandler.onStepClick(step);
         }
     }
@@ -56,17 +56,17 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RecipeStepsAdapterViewHolder recipeStepsAdapterViewHolder, int position) {
-        recipeStepsAdapterViewHolder.textView.setText(steps.get(position).getShortDescription());
+        recipeStepsAdapterViewHolder.textView.setText(mSteps.get(position).getShortDescription());
     }
 
     @Override
     public int getItemCount() {
-        if (steps == null) return 0;
-        return steps.size();
+        if (mSteps == null) return 0;
+        return mSteps.size();
     }
 
     public void setStepsData(List<Step> stepsData) {
-        steps = stepsData;
+        mSteps = stepsData;
         notifyDataSetChanged();
     }
 }

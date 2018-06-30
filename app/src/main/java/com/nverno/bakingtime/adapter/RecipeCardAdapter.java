@@ -13,13 +13,12 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.model.Recipe;
 import com.squareup.picasso.Picasso;
 
-
 import java.util.List;
 
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.RecipeCardAdapterViewHolder> {
 
     private final Context mContext;
-    private List<Recipe> recipes;
+    private List<Recipe> mRecipes;
 
     private final RecipeCardOnClickHandler mClickHandler;
 
@@ -44,7 +43,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            Recipe recipe = recipes.get(adapterPosition);
+            Recipe recipe = mRecipes.get(adapterPosition);
             mClickHandler.onCardClick(recipe);
         }
     }
@@ -63,8 +62,8 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeCardAdapterViewHolder recipeCardAdapterViewHolder, int position) {
-        recipeCardAdapterViewHolder.textView.setText(recipes.get(position).getName());
-        String imageToInsert = recipes.get(position).getImage();
+        recipeCardAdapterViewHolder.textView.setText(mRecipes.get(position).getName());
+        String imageToInsert = mRecipes.get(position).getImage();
         if (!imageToInsert.isEmpty()) {
             Picasso.with(mContext).load(imageToInsert).resize(500,200)
                     .centerCrop()
@@ -74,12 +73,12 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public int getItemCount() {
-        if (recipes == null) return 0;
-        return recipes.size();
+        if (mRecipes == null) return 0;
+        return mRecipes.size();
     }
 
     public void setRecipeData(List<Recipe> recipeData) {
-        recipes = recipeData;
+        mRecipes = recipeData;
         notifyDataSetChanged();
     }
 }
