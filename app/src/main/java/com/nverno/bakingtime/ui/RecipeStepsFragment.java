@@ -65,7 +65,7 @@ public class RecipeStepsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.recipe_steps_fragment,
+        final View rootView = inflater.inflate(R.layout.fragment_steps_list,
                 container,
                 false);
 

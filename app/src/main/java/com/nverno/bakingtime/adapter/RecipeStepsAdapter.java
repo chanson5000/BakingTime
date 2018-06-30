@@ -44,7 +44,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @NonNull
     public RecipeStepsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        int layoutId = R.layout.recipe_step_description;
+        int layoutId = R.layout.item_step_short_description;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
         View view = inflater.inflate(layoutId, viewGroup, false);

@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/wide_layout_horizontal_divider"
-        tools:layout="@layout/recipe_step_media_fragment" />
+        tools:layout="@layout/fragment_step_media" />
 
     <View
         android:id="@+id/wide_layout_horizontal_divider"
@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/wide_layout_vertical_divider"
-            tools:layout="@layout/recipe_steps_fragment"
+            tools:layout="@layout/fragment_steps_list"
             />
 
         <View
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/wide_layout_vertical_divider"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/recipe_step_detail_fragment"
+            tools:layout="@layout/fragment_step_detail"
             />
 
     </android.support.constraint.ConstraintLayout>

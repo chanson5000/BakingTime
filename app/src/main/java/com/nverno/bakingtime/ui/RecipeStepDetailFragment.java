@@ -44,7 +44,7 @@ public class RecipeStepDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.recipe_step_detail_fragment,
+        final View rootView = inflater.inflate(R.layout.fragment_step_detail,
                 container, false);
 
         mTextRecipeStepInstruction = rootView.findViewById(R.id.recipe_step_instructions);
