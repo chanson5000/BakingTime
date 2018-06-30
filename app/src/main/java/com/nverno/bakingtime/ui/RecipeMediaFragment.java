@@ -84,7 +84,7 @@ public class RecipeMediaFragment extends Fragment {
                         initializePlayer(Uri.parse(step.getVideoURL()));
                     } else if (!step.getThumbnailURL().isEmpty()) {
                         playerVisible();
-                        initializePlayer(Uri.parse(step.getVideoURL()));
+                        initializePlayer(Uri.parse(step.getThumbnailURL()));
                     } else {
                         noMedia();
                     }
@@ -94,12 +94,12 @@ public class RecipeMediaFragment extends Fragment {
     }
 
     private void playerVisible() {
-        mNoMedia.setVisibility(View.INVISIBLE);
+        mNoMedia.setVisibility(View.GONE);
         mPlayerView.setVisibility(View.VISIBLE);
     }
 
     private void noMedia() {
-        mPlayerView.setVisibility(View.INVISIBLE);
+        mPlayerView.setVisibility(View.GONE);
         mNoMedia.setVisibility(View.VISIBLE);
     }
 
