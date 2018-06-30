@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements RecipeCardOnClickHandler {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String RECIPE_ID = "RECIPE_ID";
 
     private RecipeCardAdapter mRecipeCardAdapter;
@@ -42,16 +41,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initView() {
-        if (findViewById(R.id.wide_layout_divider) != null) {
+        if (findViewById(R.id.is_sw600dp) != null) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
 
         mRecyclerView.setHasFixedSize(true);
-
         mRecipeCardAdapter = new RecipeCardAdapter(this, this);
-
         mRecyclerView.setAdapter(mRecipeCardAdapter);
     }
 
