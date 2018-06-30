@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,41 +10,6 @@
         android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_steps_list"
-        />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/step_extras_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <fragment
-            android:id="@+id/step_media_fragment"
-            android:name="com.nverno.bakingtime.ui.RecipeMediaFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_step_media"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/step_detail_fragment"
-            android:visibility="invisible"
-            />
-
-        <fragment
-            android:id="@+id/step_detail_fragment"
-            android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            tools:layout="@layout/fragment_step_detail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/step_media_fragment"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="invisible"
-            />
-
-    </android.support.constraint.ConstraintLayout>
+        tools:layout="@layout/fragment_steps_list" />
 
 </FrameLayout>
