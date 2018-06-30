@@ -30,14 +30,14 @@ public class RecipeRepository {
 
     private static final String LOG_TAG = RecipeRepository.class.getSimpleName();
 
-    private final RecipeDatabase recipeDatabase;
+    private final RecipeDatabase mRecipeDatabase;
 
     private final Context mContext;
 
-    private static boolean databaseUpdated = false;
+    private static boolean sDatabaseUpdated;
 
     public RecipeRepository(Context context) {
-        recipeDatabase = RecipeDatabase.getInstance(context);
+        mRecipeDatabase = RecipeDatabase.getInstance(context);
 
         mContext = context;
 
@@ -51,7 +51,7 @@ public class RecipeRepository {
             return;
         }
 
-        if (databaseUpdated) {
+        if (sDatabaseUpdated) {
             Log.d(LOG_TAG, "Skipped data fetched, already fetched.");
             return;
         }
@@ -71,40 +71,44 @@ public class RecipeRepository {
                     case 200:
                         final List<Recipe> recipes = response.body();
 
-                        final List<Recipe> modRecipes = fillInBlanks(recipes);
-                        Log.d(LOG_TAG, "Successfully fetched data.");
-
-                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                recipeDatabase.recipeDao().insertMany(fillInBlanks(modRecipes));
-                            }
-                        });
-
-                        for (Recipe recipe : recipes) {
-
-                            final List<Ingredient> ingredients = recipe.getIngredients();
-
-                            final List<Step> steps = recipe.getSteps();
-
-                            for (Ingredient ingredient : ingredients) {
-                                ingredient.setRecipeId(recipe.getId());
-                            }
-
-                            for (Step step : steps) {
-                                step.setRecipeId(recipe.getId());
-                            }
+                        if (recipes != null && !recipes.isEmpty()) {
+                            final List<Recipe> modRecipes = fillInBlanks(recipes);
+                            Log.d(LOG_TAG, "Successfully fetched data.");
 
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    recipeDatabase.ingredientDao().insertMany(ingredients);
-                                    recipeDatabase.stepDao().insertMany(steps);
+                                    mRecipeDatabase.recipeDao().insertMany(fillInBlanks(modRecipes));
                                 }
                             });
-                        }
 
-                        databaseUpdated = true;
+                            for (Recipe recipe : recipes) {
+
+                                final List<Ingredient> ingredients = recipe.getIngredients();
+
+                                final List<Step> steps = recipe.getSteps();
+
+                                for (Ingredient ingredient : ingredients) {
+                                    ingredient.setRecipeId(recipe.getId());
+                                }
+
+                                for (Step step : steps) {
+                                    step.setRecipeId(recipe.getId());
+                                }
+
+                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mRecipeDatabase.ingredientDao().insertMany(ingredients);
+                                        mRecipeDatabase.stepDao().insertMany(steps);
+                                    }
+                                });
+                            }
+
+                            sDatabaseUpdated = true;
+                        } else{
+                            Log.d(LOG_TAG, "Failed to fetch internet data: empty response.");
+                        }
                         break;
                     default:
                         Log.e(LOG_TAG, "Failed to fetch internet data.");
@@ -158,19 +162,19 @@ public class RecipeRepository {
     }
 
     public LiveData<List<Recipe>> getAll() {
-        return recipeDatabase.recipeDao().getAll();
+        return mRecipeDatabase.recipeDao().getAll();
     }
 
     public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeId) {
-        return recipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
+        return mRecipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
     }
 
     public LiveData<List<Ingredient>> getAllIngredients() {
-        return recipeDatabase.ingredientDao().getAll();
+        return mRecipeDatabase.ingredientDao().getAll();
     }
 
     public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
-        return recipeDatabase.stepDao().getStepsForRecipe(recipeId);
+        return mRecipeDatabase.stepDao().getStepsForRecipe(recipeId);
     }
 
     private boolean networkNotAvailable(Context context) {
