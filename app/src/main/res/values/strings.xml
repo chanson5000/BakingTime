@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Baking Time</string>
     <string name="dessert_image_content_description">Dessert Image</string>
+    <string name="no_media">No Media Available</string>
+    <string name="instruction_media">Instruction Media</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="placeholder_recipe_step_instructions">Recipe Step Instructions</string>
 </resources>
