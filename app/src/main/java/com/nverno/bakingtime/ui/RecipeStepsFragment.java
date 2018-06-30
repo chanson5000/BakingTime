@@ -1,5 +1,6 @@
 package com.nverno.bakingtime.ui;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -8,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,6 @@ import com.nverno.bakingtime.RecipeStepDetailActivity;
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
 import com.nverno.bakingtime.model.Ingredient;
-import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
@@ -29,21 +31,24 @@ import java.util.List;
 public class RecipeStepsFragment extends Fragment
         implements RecipeStepOnClickHandler {
 
-    private RecipeStepOnClickHandler mClickHandler;
-    private Context mContext;
-    private static RecipeViewModel recipeViewModel;
-
-    private RecyclerView mRecyclerView;
-    private RecipeStepsAdapter mStepsAdapter;
-    private Recipe mRecipe;
+    private static String LOG_TAG = RecipeStepsFragment.class.getSimpleName();
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
 
+    private RecipeStepOnClickHandler mClickHandler;
+    private Context mContext;
+    private RecipeViewModel recipeViewModel;
+
+    private RecipeStepsAdapter mStepsAdapter;
+
     private boolean mWideLayout;
 
-
     private TextView mTextIngredients;
+
+    public RecipeStepsFragment() {
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -63,10 +68,6 @@ public class RecipeStepsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-    }
-
-    public RecipeStepsFragment() {
     }
 
     @Override
@@ -74,12 +75,11 @@ public class RecipeStepsFragment extends Fragment
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_steps_list,
-                container,
-                false);
+                container, false);
 
         mTextIngredients = rootView.findViewById(R.id.recipe_steps_ingredients);
 
-        mRecyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
@@ -95,26 +95,24 @@ public class RecipeStepsFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getActivity() != null) {
-            if (getActivity().findViewById(R.id.divider_vertical_constraint) != null) {
-                mWideLayout = true;
-            }
+
+        if (getActivity() == null) {
+            Log.e(LOG_TAG, "FragmentActivity was null in onActivityCreated!");
+            return;
         }
-        initViewModel();
+
+        FragmentActivity activity = getActivity();
+
+        if (activity.findViewById(R.id.divider_vertical_constraint) != null) {
+            mWideLayout = true;
+        }
+
+        initViewModel(activity);
     }
 
-    private void initViewModel() {
-        if (getActivity() != null) {
-            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-        }
-        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
-                if (recipe != null) {
-                    mRecipe = recipe;
-                }
-            }
-        });
+    private void initViewModel(FragmentActivity activity) {
+
+        recipeViewModel = ViewModelProviders.of(activity).get(RecipeViewModel.class);
 
         recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
@@ -150,17 +148,20 @@ public class RecipeStepsFragment extends Fragment
     }
 
     public void onStepClick(Step step) {
+        if (step == null) {
+            Log.e(LOG_TAG, "FragmentActivity was null in onStepClick!");
+            return;
+        }
+
+        recipeViewModel.setSelectedRecipeStep(step.getStep());
+
         if (!mWideLayout) {
             Intent intent = new Intent(getContext(), RecipeStepDetailActivity.class);
 
-            if (step != null) {
-                intent.putExtra(RECIPE_ID, step.getRecipeId());
-                intent.putExtra(STEP_ID, step.getStep());
-            }
+            intent.putExtra(RECIPE_ID, step.getRecipeId());
+            intent.putExtra(STEP_ID, step.getStep());
 
             startActivity(intent);
-        } else {
-            recipeViewModel.setSelectedRecipeStep(step.getStep());
         }
     }
 }
