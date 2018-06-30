@@ -18,8 +18,9 @@ public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeStepOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
+    private static final String STEP_ID = "STEP_ID";
 
-    private boolean mTwoPane;
+    private boolean mWideLayout;
 
     private RecipeViewModel recipeViewModel;
 
@@ -51,7 +52,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         mRecipeStepsFragment = new RecipeStepsFragment();
 
         if (findViewById(R.id.divider_vertical_constraint) != null) {
-            mTwoPane = true;
+            mWideLayout = true;
         }
     }
 
@@ -68,12 +69,24 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     public void onStepClick(Step step) {
 
-        if (!mTwoPane) {
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                    .hide(mRecipeStepsFragment)
-                    .show(mRecipeStepDetailFragment)
-                    .commit();
+        if (mWideLayout) {
+//            fragmentManager.beginTransaction()
+//                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+//                    .hide(mRecipeStepsFragment)
+//                    .show(mRecipeStepDetailFragment)
+//                    .commit();
+
+            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+
+//            Step selectedRecipeStep = recipeViewModel.getSelectedRecipeStep().getValue();
+
+            if (step != null) {
+                intent.putExtra(RECIPE_ID, step.getRecipeId());
+                intent.putExtra(STEP_ID, step.getStep());
+            }
+
+            startActivity(intent);
+
         }
     }
 }
