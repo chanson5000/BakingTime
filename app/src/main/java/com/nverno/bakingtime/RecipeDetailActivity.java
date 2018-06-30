@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.model.Step;
+import com.nverno.bakingtime.ui.RecipeMediaFragment;
 import com.nverno.bakingtime.ui.RecipeStepDetailFragment;
 import com.nverno.bakingtime.ui.RecipeStepsFragment;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
@@ -19,7 +20,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     private static final String RECIPE_ID = "RECIPE_ID";
 
-    private boolean mTwoPane;
+    private boolean mSmallLayout;
 
     private RecipeViewModel recipeViewModel;
 
@@ -27,6 +28,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     Fragment mRecipeStepDetailFragment;
     Fragment mRecipeStepsFragment;
+    Fragment mRecipeMediaFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,30 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         mRecipeStepDetailFragment = new RecipeStepDetailFragment();
         mRecipeStepsFragment = new RecipeStepsFragment();
+        mRecipeMediaFragment = new RecipeMediaFragment();
 
-        if (findViewById(R.id.wide_layout_vertical_divider) != null) {
-            mTwoPane = true;
+
+        if (findViewById(R.id.step_extras_layout) != null) {
+            mSmallLayout = true;
         }
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mSmallLayout) {
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .show(mRecipeStepsFragment)
+                    .hide(mRecipeMediaFragment)
+                    .hide(mRecipeStepDetailFragment)
+                    .commit();
+        }
+
     }
 
     private void initViewModel(int recipeId) {
@@ -68,10 +90,11 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     public void onStepClick(Step step) {
 
-        if (!mTwoPane) {
+        if (mSmallLayout) {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .hide(mRecipeStepsFragment)
+                    .show(mRecipeMediaFragment)
                     .show(mRecipeStepDetailFragment)
                     .commit();
         }

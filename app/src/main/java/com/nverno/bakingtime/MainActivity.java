@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initView() {
-        if (findViewById(R.id.wide_layout_divider) != null) {
+        if (findViewById(R.id.wide_layout_vertical_divider) != null) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
