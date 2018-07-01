@@ -90,6 +90,24 @@ public class RecipeViewModel extends AndroidViewModel {
         });
     }
 
+    public void nextRecipeStep() {
+        if (selectedRecipeStep.getValue() != null && selectedRecipeSteps.getValue() != null) {
+            if (selectedRecipeStep.getValue().getStep() < selectedRecipeSteps.getValue().size())
+            {
+                setSelectedRecipeStep(selectedRecipeStep.getValue().getStep() + 1);
+            }
+
+        }
+    }
+
+    public void previousRecipeStep() {
+        if (selectedRecipeStep.getValue() != null && selectedRecipeSteps.getValue() != null) {
+            if (selectedRecipeStep.getValue().getStep() > 0) {
+                setSelectedRecipeStep(selectedRecipeStep.getValue().getStep() - 1);
+            }
+        }
+    }
+
     public LiveData<List<Ingredient>> getSelectedRecipeIngredients() {
         return selectedRecipeIngredients;
     }
