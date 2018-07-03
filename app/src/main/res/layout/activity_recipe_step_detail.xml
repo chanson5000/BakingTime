@@ -18,9 +18,7 @@
 
     <View
         android:id="@+id/divider_horizontal_constraint"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        style="@style/HorizontalDivider"
         app:layout_constraintBottom_toTopOf="@id/fragment_step_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
