@@ -27,5 +27,25 @@
         <item name="android:layout_height">0dp</item>
         <item name="android:background">@android:color/darker_gray</item>
     </style>
+    <style name="RecipeStepInstructionText" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:text">@string/placeholder_recipe_step_instructions</item>
+    </style>
+    <style name="NoMediaAvailable" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/no_media</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+    <style name="HorizontalDividerNoConstraint" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
 
 </resources>
