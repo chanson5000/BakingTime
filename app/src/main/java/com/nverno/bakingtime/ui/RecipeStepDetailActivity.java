@@ -1,10 +1,11 @@
-package com.nverno.bakingtime;
+package com.nverno.bakingtime.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class RecipeStepDetailActivity extends AppCompatActivity {
