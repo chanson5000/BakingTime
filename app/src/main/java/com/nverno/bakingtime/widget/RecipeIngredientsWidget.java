@@ -9,15 +9,18 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.RecipeDetailActivity;
+import com.nverno.bakingtime.ui.RecipeDetailActivity;
+import com.nverno.bakingtime.model.Recipe;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class RecipeIngredientsWidget extends AppWidgetProvider {
 
+    private static final String RECIPE_ID = "RECIPE_ID";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                String recipeName, String ingredients, int appWidgetId) {
+                                Recipe recipe, String ingredients, int appWidgetId) {
 
         String recipeNameText;
         String ingredientsText;
@@ -26,8 +29,8 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.recipe_ingredients_widget);
 
-        if (recipeName != null && ingredients != null) {
-            recipeNameText = recipeName;
+        if (recipe != null && ingredients != null) {
+            recipeNameText = recipe.getName();
             ingredientsText = ingredients;
 
             // Set the text views
@@ -48,6 +51,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         // The pending intent
         Intent intent = new Intent(context, RecipeDetailActivity.class);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 intent, 0);
 
@@ -68,10 +72,10 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     }
 
     public static void updateRecipeIngredientsWidgets(Context context, AppWidgetManager appWidgetManager,
-                                                      String recipeName, String ingredients,
+                                                      Recipe recipe, String ingredients,
                                                       int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, recipeName, ingredients, appWidgetId);
+            updateAppWidget(context, appWidgetManager, recipe, ingredients, appWidgetId);
         }
     }
 

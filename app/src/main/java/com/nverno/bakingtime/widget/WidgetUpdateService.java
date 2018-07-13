@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.util.IngredientStringHelper;
 
 public class WidgetUpdateService extends IntentService {
@@ -34,14 +35,14 @@ public class WidgetUpdateService extends IntentService {
 
     private void handleActionUpdateRecipeIngredientsWidget() {
 
-        String recipeName = IngredientStringHelper.getInstance().getCurrentRecipeName();
+        Recipe recipe = IngredientStringHelper.getInstance().getCurrentRecipeName();
         String ingredients = IngredientStringHelper.getInstance().getCurrentIngredientsString();
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                 new ComponentName(this, RecipeIngredientsWidget.class));
         // Update all widgets
-        RecipeIngredientsWidget.updateRecipeIngredientsWidgets(this, appWidgetManager, recipeName,
+        RecipeIngredientsWidget.updateRecipeIngredientsWidgets(this, appWidgetManager, recipe,
                 ingredients, appWidgetIds);
 
     }

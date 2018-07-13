@@ -2,6 +2,7 @@ package com.nverno.bakingtime.util;
 
 import android.content.Context;
 
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.widget.WidgetUpdateService;
 import com.nverno.bakingtime.model.Ingredient;
 
@@ -11,7 +12,7 @@ public class IngredientStringHelper {
 
     private static IngredientStringHelper INSTANCE = null;
     private String mCurrentIngredients;
-    private String mCurrentRecipeName;
+    private Recipe mCurrentRecipe;
 
     private IngredientStringHelper() {}
 
@@ -30,9 +31,9 @@ public class IngredientStringHelper {
         }
     }
 
-    public String getCurrentRecipeName() {
-        if (mCurrentRecipeName != null) {
-            return mCurrentRecipeName;
+    public Recipe getCurrentRecipeName() {
+        if (mCurrentRecipe != null) {
+            return mCurrentRecipe;
         } else {
             return null;
         }
@@ -62,8 +63,8 @@ public class IngredientStringHelper {
         return currentIngredients;
     }
 
-    public void setCurrentRecipeName(Context context, String currentRecipeName) {
-        mCurrentRecipeName = currentRecipeName;
+    public void setCurrentRecipe(Context context, Recipe currentRecipe) {
+        mCurrentRecipe = currentRecipe;
 
         WidgetUpdateService.startActionUpdateRecipeWidgets(context);
     }

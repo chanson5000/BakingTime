@@ -118,8 +118,8 @@ public class RecipeStepsFragment extends Fragment
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 if (recipe != null) {
-                    IngredientStringHelper.getInstance().setCurrentRecipeName(getActivity(),
-                            recipe.getName());
+                    IngredientStringHelper.getInstance().setCurrentRecipe(getActivity(),
+                            recipe);
                 }
             }
         });
