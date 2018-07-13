@@ -1,4 +1,4 @@
-package com.nverno.bakingtime;
+package com.nverno.bakingtime.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.RecipeCardAdapter;
 import com.nverno.bakingtime.adapter.RecipeCardOnClickHandler;
 import com.nverno.bakingtime.model.Recipe;
