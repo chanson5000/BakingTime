@@ -30,18 +30,20 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
             recipeNameText = recipeName;
             ingredientsText = ingredients;
 
-            views.setTextViewText(R.id.ingredients_widget_text, ingredientsText);
-            views.setTextViewText(R.id.ingredients_widget_recipe_name, recipeNameText);
+            // Set the text views
+            views.setTextViewText(R.id.widget_text_ingredients_list, ingredientsText);
+            views.setTextViewText(R.id.widget_text_recipe_name, recipeNameText);
 
-//            views.setViewVisibility(R.id.text_no_recipe_selected, View.GONE);
-//            views.setViewVisibility(R.id.ingredients_widget_recipe_name, View.VISIBLE);
+            // Set the visibility
+            views.setViewVisibility(R.id.widget_text_static_no_recipe_selected, View.GONE);
+            views.setViewVisibility(R.id.widget_text_recipe_name, View.VISIBLE);
             views.setViewVisibility(R.id.widget_text_static_ingredients, View.VISIBLE);
-            views.setViewVisibility(R.id.ingredients_widget_text, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_text_ingredients_list, View.VISIBLE);
         } else {
-//            views.setViewVisibility(R.id.ingredients_widget_recipe_name, View.GONE);
-            views.setViewVisibility(R.id.widget_text_static_ingredients, View.INVISIBLE);
-            views.setViewVisibility(R.id.ingredients_widget_text, View.INVISIBLE);
-//            views.setViewVisibility(R.id.text_no_recipe_selected, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_text_recipe_name, View.GONE);
+            views.setViewVisibility(R.id.widget_text_static_ingredients, View.GONE);
+            views.setViewVisibility(R.id.widget_text_ingredients_list, View.GONE);
+            views.setViewVisibility(R.id.widget_text_static_no_recipe_selected, View.VISIBLE);
         }
 
         // The pending intent
