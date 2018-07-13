@@ -1,52 +1,56 @@
-package com.nverno.bakingtime;
+package com.nverno.bakingtime.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 
-import com.nverno.bakingtime.model.Ingredient;
-import com.nverno.bakingtime.util.IngredientStringHelper;
-
-import java.util.List;
+import com.nverno.bakingtime.R;
+import com.nverno.bakingtime.RecipeDetailActivity;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class RecipeIngredientsWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, String recipeName,
-                                String ingredients, int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                String recipeName, String ingredients, int appWidgetId) {
 
         String recipeNameText;
         String ingredientsText;
 
-        if (recipeName != null) {
-            recipeNameText = recipeName;
-        } else {
-            recipeNameText = context.getString(R.string.no_recipe_selected);
-        }
-
-        if (ingredients != null) {
-            ingredientsText = ingredients;
-        } else {
-            ingredientsText = "";
-        }
-
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
-        views.setTextViewText(R.id.ingredients_widget_text, ingredientsText);
-        views.setTextViewText(R.id.ingredients_widget_recipe_name, recipeNameText);
+        RemoteViews views = new RemoteViews(context.getPackageName(),
+                R.layout.recipe_ingredients_widget);
+
+        if (recipeName != null && ingredients != null) {
+            recipeNameText = recipeName;
+            ingredientsText = ingredients;
+
+            views.setTextViewText(R.id.ingredients_widget_text, ingredientsText);
+            views.setTextViewText(R.id.ingredients_widget_recipe_name, recipeNameText);
+
+//            views.setViewVisibility(R.id.text_no_recipe_selected, View.GONE);
+//            views.setViewVisibility(R.id.ingredients_widget_recipe_name, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_text_static_ingredients, View.VISIBLE);
+            views.setViewVisibility(R.id.ingredients_widget_text, View.VISIBLE);
+        } else {
+//            views.setViewVisibility(R.id.ingredients_widget_recipe_name, View.GONE);
+            views.setViewVisibility(R.id.widget_text_static_ingredients, View.INVISIBLE);
+            views.setViewVisibility(R.id.ingredients_widget_text, View.INVISIBLE);
+//            views.setViewVisibility(R.id.text_no_recipe_selected, View.VISIBLE);
+        }
 
         // The pending intent
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, RecipeDetailActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 intent, 0);
 
         // Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.ingredients_widget_text, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_linear_layout, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
