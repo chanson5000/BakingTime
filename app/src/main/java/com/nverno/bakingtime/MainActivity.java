@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import com.nverno.bakingtime.adapter.RecipeCardAdapter;
 import com.nverno.bakingtime.adapter.RecipeCardOnClickHandler;
 import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.ui.RecipeDetailActivity;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 import java.util.List;
