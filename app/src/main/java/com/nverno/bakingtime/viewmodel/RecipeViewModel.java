@@ -109,10 +109,16 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Ingredient>> getSelectedRecipeIngredients() {
+        if (selectedRecipeIngredients == null) {
+            selectedRecipeIngredients = new MediatorLiveData<>();
+        }
         return selectedRecipeIngredients;
     }
 
     public LiveData<List<Step>> getSelectedRecipeSteps() {
+        if (selectedRecipeSteps == null) {
+            selectedRecipeSteps = new MediatorLiveData<>();
+        }
         return selectedRecipeSteps;
     }
 }
