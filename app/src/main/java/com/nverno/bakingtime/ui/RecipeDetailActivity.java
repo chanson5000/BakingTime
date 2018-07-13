@@ -3,6 +3,7 @@ package com.nverno.bakingtime.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
@@ -25,6 +26,21 @@ public class RecipeDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            // This has hidden the action bar back navigation button which I consider redundant.
+            actionBar.setDisplayHomeAsUpEnabled(false);
+
+            // An internet resource suggested using these as well but it seems I can just rid of it
+            // using only the method above... even though the documentation description kind of
+            // suggests that the following methods may also have something to do with it.
+            // Sort of confused on this one, maybe figure out details later but it works for now.
+
+            // actionBar.setHomeButtonEnabled(false);
+            // actionBar.setDisplayShowHomeEnabled(false);
+        }
 
         Intent parentIntent = getIntent();
 
