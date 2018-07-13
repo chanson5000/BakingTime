@@ -120,6 +120,7 @@ public class RecipeStepsFragment extends Fragment
                 if (recipe != null) {
                     IngredientStringHelper.getInstance().setCurrentRecipe(getActivity(),
                             recipe);
+
                 }
             }
         });
