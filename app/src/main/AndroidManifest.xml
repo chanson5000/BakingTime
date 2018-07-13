@@ -19,9 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RecipeDetailActivity" />
+
+        <activity
+            android:name=".ui.RecipeDetailActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:launchMode="singleTop" />
+
         <activity
             android:name=".ui.RecipeStepDetailActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:launchMode="singleTop" />
 
         <receiver android:name=".widget.RecipeIngredientsWidget">
