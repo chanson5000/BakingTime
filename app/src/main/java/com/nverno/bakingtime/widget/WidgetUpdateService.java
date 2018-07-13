@@ -1,4 +1,4 @@
-package com.nverno.bakingtime;
+package com.nverno.bakingtime.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
@@ -35,7 +35,6 @@ public class WidgetUpdateService extends IntentService {
     private void handleActionUpdateRecipeIngredientsWidget() {
 
         String recipeName = IngredientStringHelper.getInstance().getCurrentRecipeName();
-
         String ingredients = IngredientStringHelper.getInstance().getCurrentIngredientsString();
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
