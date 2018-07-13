@@ -119,7 +119,8 @@ public class RecipeStepsFragment extends Fragment
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 if (recipe != null) {
-                    IngredientStringHelper.getInstance().setCurrentRecipename(getActivity(), recipe.getName());
+                    IngredientStringHelper.getInstance().setCurrentRecipeName(getActivity(),
+                            recipe.getName());
                 }
             }
         });
@@ -128,9 +129,11 @@ public class RecipeStepsFragment extends Fragment
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
                 if (ingredients != null && !ingredients.isEmpty()) {
-                    mTextIngredients.setText(IngredientStringHelper
-                            .getInstance()
-                            .ListToFormattedString(getActivity(), ingredients));
+                    String ingredientString = "Ingredients: " +
+                            IngredientStringHelper.getInstance()
+                                    .ListToFormattedString(getActivity(), ingredients);
+
+                    mTextIngredients.setText(ingredientString);
                 }
             }
         });
