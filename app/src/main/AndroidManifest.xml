@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeDetailActivity"></activity>
+        <activity android:name=".RecipeDetailActivity" />
         <activity
             android:name=".RecipeStepDetailActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
 
         <receiver android:name=".RecipeIngredientsWidget">
             <intent-filter>
@@ -33,6 +33,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/recipe_ingredients_widget_info" />
         </receiver>
+        <service android:name=".WidgetUpdateService" />
     </application>
 
 </manifest>
