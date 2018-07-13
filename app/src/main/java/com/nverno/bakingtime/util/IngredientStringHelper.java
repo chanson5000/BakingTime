@@ -2,8 +2,7 @@ package com.nverno.bakingtime.util;
 
 import android.content.Context;
 
-import com.nverno.bakingtime.RecipeIngredientsWidget;
-import com.nverno.bakingtime.WidgetUpdateService;
+import com.nverno.bakingtime.widget.WidgetUpdateService;
 import com.nverno.bakingtime.model.Ingredient;
 
 import java.util.List;
@@ -48,8 +47,6 @@ public class IngredientStringHelper {
     public String ListToFormattedString(Context context, List<Ingredient> ingredients) {
         StringBuilder ingredientString = new StringBuilder();
 
-        ingredientString.append("Ingredients: ");
-
         for (int i = 0; i < ingredients.size(); i++) {
             if (i == ingredients.size() - 1) {
                 ingredientString.append(ingredients.get(i).getName()).append(".");
@@ -65,7 +62,7 @@ public class IngredientStringHelper {
         return currentIngredients;
     }
 
-    public void setCurrentRecipename(Context context, String currentRecipeName) {
+    public void setCurrentRecipeName(Context context, String currentRecipeName) {
         mCurrentRecipeName = currentRecipeName;
 
         WidgetUpdateService.startActionUpdateRecipeWidgets(context);
