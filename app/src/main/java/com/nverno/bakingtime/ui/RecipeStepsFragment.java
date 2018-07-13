@@ -1,6 +1,5 @@
 package com.nverno.bakingtime.ui;
 
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -23,7 +22,9 @@ import com.nverno.bakingtime.RecipeStepDetailActivity;
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
 import com.nverno.bakingtime.model.Ingredient;
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
+import com.nverno.bakingtime.util.IngredientStringHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 import java.util.List;
@@ -114,25 +115,22 @@ public class RecipeStepsFragment extends Fragment
 
         recipeViewModel = ViewModelProviders.of(activity).get(RecipeViewModel.class);
 
+        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe recipe) {
+                if (recipe != null) {
+                    IngredientStringHelper.getInstance().setCurrentRecipename(getActivity(), recipe.getName());
+                }
+            }
+        });
+
         recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
                 if (ingredients != null && !ingredients.isEmpty()) {
-                    StringBuilder ingredientString = new StringBuilder();
-
-                    ingredientString.append("Ingredients: ");
-
-                    for (int i = 0; i < ingredients.size(); i++) {
-                        if (i == ingredients.size() - 1) {
-                            ingredientString.append(ingredients.get(i).getName()).append(".");
-                        } else {
-                            ingredientString.append(ingredients.get(i).getName()).append(", ");
-                        }
-                    }
-
-                    String textToSet = ingredientString.toString();
-
-                    mTextIngredients.setText(textToSet);
+                    mTextIngredients.setText(IngredientStringHelper
+                            .getInstance()
+                            .ListToFormattedString(getActivity(), ingredients));
                 }
             }
         });
