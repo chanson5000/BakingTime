@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/fragment_steps_list"
-        android:name="com.nverno.bakingtime.ui.RecipeStepsFragment"
+        android:name="com.nverno.bakingtime.ui.StepsListFragment"
         android:layout_width="250dp"
         android:layout_height="0dp"
         tools:layout="@layout/fragment_steps_list"

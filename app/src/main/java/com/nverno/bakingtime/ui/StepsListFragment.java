@@ -27,10 +27,10 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 import java.util.List;
 
-public class RecipeStepsFragment extends Fragment
+public class StepsListFragment extends Fragment
         implements RecipeStepsAdapter.RecipeStepOnClickHandler {
 
-    private static String LOG_TAG = RecipeStepsFragment.class.getSimpleName();
+    private static String LOG_TAG = StepsListFragment.class.getSimpleName();
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
@@ -45,7 +45,7 @@ public class RecipeStepsFragment extends Fragment
 
     private TextView mTextIngredients;
 
-    public RecipeStepsFragment() {
+    public StepsListFragment() {
 
     }
 
