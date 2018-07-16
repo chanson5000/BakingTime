@@ -9,9 +9,7 @@
     <TextView
         android:id="@+id/recipe_steps_ingredients"
         android:text="@string/ingredients"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"/>
+        style="@style/Text.List" />
 
     <View
         style="@style/Divider.HorizontalNonConstraint" />

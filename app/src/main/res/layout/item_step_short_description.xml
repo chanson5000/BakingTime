@@ -7,11 +7,7 @@
 
     <TextView
         android:id="@+id/recipe_step_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        style="@style/Text.List" />
 
     <View
         style="@style/Divider.HorizontalNonConstraint" />
