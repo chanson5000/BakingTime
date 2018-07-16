@@ -86,7 +86,7 @@ public class RecipeRepository {
 
                                 final List<Ingredient> ingredients = recipe.getIngredients();
 
-                                final List<Step> steps = recipe.getSteps();
+                                final List<Step> steps = fixStepIndexes(recipe.getSteps());
 
                                 for (Ingredient ingredient : ingredients) {
                                     ingredient.setRecipeId(recipe.getId());
@@ -95,6 +95,7 @@ public class RecipeRepository {
                                 for (Step step : steps) {
                                     step.setRecipeId(recipe.getId());
                                 }
+
 
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
@@ -106,7 +107,7 @@ public class RecipeRepository {
                             }
 
                             sDatabaseUpdated = true;
-                        } else{
+                        } else {
                             Log.d(LOG_TAG, "Failed to fetch internet data: empty response.");
                         }
                         break;
@@ -122,6 +123,15 @@ public class RecipeRepository {
                 Log.e(LOG_TAG, "Failed to fetch internet data.");
             }
         });
+    }
+
+    private List<Step> fixStepIndexes(List<Step> steps) {
+        for (int stepOrder = 0; stepOrder < steps.size(); stepOrder++) {
+            if (steps.get(stepOrder).getStep() != stepOrder) {
+                steps.get(stepOrder).setStep(stepOrder);
+            }
+        }
+        return steps;
     }
 
     private List<Recipe> fillInBlanks(List<Recipe> recipes) {
