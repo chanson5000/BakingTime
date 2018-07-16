@@ -156,7 +156,7 @@ public class StepsListFragment extends Fragment
         recipeViewModel.setSelectedRecipeStep(step.getStep());
 
         if (!mWideLayout) {
-            Intent intent = new Intent(getContext(), RecipeStepDetailActivity.class);
+            Intent intent = new Intent(getContext(), StepDetailActivity.class);
 
             intent.putExtra(RECIPE_ID, step.getRecipeId());
             intent.putExtra(STEP_ID, step.getStep());

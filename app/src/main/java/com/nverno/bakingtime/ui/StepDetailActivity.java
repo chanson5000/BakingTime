@@ -12,7 +12,7 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
-public class RecipeStepDetailActivity extends AppCompatActivity {
+public class StepDetailActivity extends AppCompatActivity {
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";

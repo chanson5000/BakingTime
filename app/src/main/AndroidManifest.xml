@@ -26,7 +26,7 @@
             android:launchMode="singleTop" />
 
         <activity
-            android:name=".ui.RecipeStepDetailActivity"
+            android:name=".ui.StepDetailActivity"
             android:parentActivityName=".ui.RecipeDetailActivity"
             android:launchMode="singleTop" />
 

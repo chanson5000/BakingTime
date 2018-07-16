@@ -91,7 +91,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     public void onStepClick(Step step) {
         if (mSmallLayout) {
-            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+            Intent intent = new Intent(this, StepDetailActivity.class);
 
             if (step != null) {
                 intent.putExtra(RECIPE_ID, step.getRecipeId());
