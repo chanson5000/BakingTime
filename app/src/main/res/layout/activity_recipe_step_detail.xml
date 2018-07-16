@@ -18,7 +18,7 @@
 
     <View
         android:id="@+id/divider_horizontal_constraint"
-        style="@style/Divider.Horizontal"
+        style="@style/Divider.HorizontalConstraint"
         app:layout_constraintBottom_toTopOf="@id/fragment_step_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

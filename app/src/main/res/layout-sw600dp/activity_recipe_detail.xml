@@ -20,7 +20,7 @@
 
     <View
         android:id="@+id/divider_horizontal_constraint"
-        style="@style/Divider.Horizontal"
+        style="@style/Divider.HorizontalConstraint"
         app:layout_constraintBottom_toTopOf="@id/constraint_container_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
 
         <View
             android:id="@+id/divider_vertical_constraint"
-            style="@style/Divider.Vertical"
+            style="@style/Divider.VerticalConstraint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/fragment_step_detail"
             app:layout_constraintStart_toEndOf="@id/fragment_steps_list"

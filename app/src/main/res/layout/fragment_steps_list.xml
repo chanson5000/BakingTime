@@ -13,7 +13,7 @@
         android:layout_margin="5dp"/>
 
     <View
-        style="@style/HorizontalDividerNoConstraint" />
+        style="@style/Divider.HorizontalNonConstraint" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_steps_recycler_view"
