@@ -122,7 +122,6 @@ public class StepsListFragment extends Fragment
             }
         });
 
-
         recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
             @Override
             public void onChanged(@Nullable Recipe recipe) {

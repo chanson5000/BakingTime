@@ -9,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.StepsAdapter;
+import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.util.IngredientStringHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
+import com.nverno.bakingtime.widget.RecipeIngredientsWidget;
+
+import java.util.List;
 
 
 public class RecipeDetailActivity extends AppCompatActivity
@@ -84,8 +88,11 @@ public class RecipeDetailActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 if (recipe != null) {
-//                    IngredientStringHelper.getInstance()
-//                            .setCurrentRecipe(getApplicationContext(), recipe);
+
+                    List<Ingredient> ingredients = recipeViewModel.getSelectedRecipeIngredients().getValue();
+
+//                    RecipeIngredientsWidget.updateRecipeIngredientsWidgets(this, );
+
                     setTitle(recipe.getName() + " Recipe");
                 }
             }

@@ -39,8 +39,10 @@ public class WidgetUpdateService extends IntentService {
         String ingredients = IngredientStringHelper.getInstance().getCurrentIngredientsString();
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                 new ComponentName(this, RecipeIngredientsWidget.class));
+
         // Update all widgets
         RecipeIngredientsWidget.updateRecipeIngredientsWidgets(this, appWidgetManager, recipe,
                 ingredients, appWidgetIds);
