@@ -30,7 +30,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        ActionBar actionBar = getSupportActionBar();
+//        ActionBar actionBar = getSupportActionBar();
 
 //        if (actionBar != null) {
             // This has hidden the action bar back navigation button which I consider redundant.
