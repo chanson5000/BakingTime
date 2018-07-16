@@ -30,7 +30,7 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
-public class RecipeMediaFragment extends Fragment {
+public class StepMediaFragment extends Fragment {
 
     private RecipeViewModel recipeViewModel;
 
@@ -40,7 +40,7 @@ public class RecipeMediaFragment extends Fragment {
 
     private FragmentActivity mFragmentActivity;
 
-    public RecipeMediaFragment() {
+    public StepMediaFragment() {
 
     }
 

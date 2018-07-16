@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/fragment_step_media"
-        android:name="com.nverno.bakingtime.ui.RecipeMediaFragment"
+        android:name="com.nverno.bakingtime.ui.StepMediaFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/divider_horizontal_constraint"
