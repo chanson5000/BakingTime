@@ -32,7 +32,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar != null) {
+//        if (actionBar != null) {
             // This has hidden the action bar back navigation button which I consider redundant.
 
 //                actionBar.setDisplayHomeAsUpEnabled(false);
@@ -44,7 +44,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
             // actionBar.setHomeButtonEnabled(false);
             // actionBar.setDisplayShowHomeEnabled(false);
-        }
+//        }
 
         Intent parentIntent = getIntent();
 
