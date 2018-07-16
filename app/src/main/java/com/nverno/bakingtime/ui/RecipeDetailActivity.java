@@ -76,9 +76,9 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         recipeViewModel.setSelectedRecipe(recipeId);
 
-//        if (recipeViewModel.getSelectedRecipeStep().getValue() == null) {
-//            recipeViewModel.setSelectedRecipeStep(0);
-//        }
+        if (recipeViewModel.getSelectedRecipeStep().getValue() == null) {
+            recipeViewModel.setSelectedRecipeStep(0);
+        }
 
         recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
             @Override
