@@ -113,6 +113,16 @@ public class StepsListFragment extends Fragment
 
         recipeViewModel = ViewModelProviders.of(activity).get(RecipeViewModel.class);
 
+        recipeViewModel.getSelectedRecipeSteps().observe(this, new Observer<List<Step>>() {
+            @Override
+            public void onChanged(@Nullable List<Step> steps) {
+                if (steps != null && !steps.isEmpty()) {
+                    mStepsAdapter.setStepsData(steps);
+                }
+            }
+        });
+
+
         recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
             @Override
             public void onChanged(@Nullable Recipe recipe) {
@@ -124,27 +134,18 @@ public class StepsListFragment extends Fragment
             }
         });
 
-        recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
-            @Override
-            public void onChanged(@Nullable List<Ingredient> ingredients) {
-                if (ingredients != null && !ingredients.isEmpty()) {
-                    String ingredientString = "Ingredients: " +
-                            IngredientStringHelper.getInstance()
-                                    .ListToFormattedString(getActivity(), ingredients);
-
-                    mTextIngredients.setText(ingredientString);
-                }
-            }
-        });
-
-        recipeViewModel.getSelectedRecipeSteps().observe(this, new Observer<List<Step>>() {
-            @Override
-            public void onChanged(@Nullable List<Step> steps) {
-                if (steps != null && !steps.isEmpty()) {
-                    mStepsAdapter.setStepsData(steps);
-                }
-            }
-        });
+//        recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Ingredient> ingredients) {
+//                if (ingredients != null && !ingredients.isEmpty()) {
+//                    String ingredientString = "Ingredients: " +
+//                            IngredientStringHelper.getInstance()
+//                                    .ListToFormattedString(getActivity(), ingredients);
+//
+//                    mTextIngredients.setText(ingredientString);
+//                }
+//            }
+//        });
     }
 
     public void onStepClick(Step step) {

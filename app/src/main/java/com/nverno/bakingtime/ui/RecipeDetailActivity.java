@@ -11,6 +11,7 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.StepsAdapter;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
+import com.nverno.bakingtime.util.IngredientStringHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 
@@ -83,6 +84,8 @@ public class RecipeDetailActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 if (recipe != null) {
+//                    IngredientStringHelper.getInstance()
+//                            .setCurrentRecipe(getApplicationContext(), recipe);
                     setTitle(recipe.getName() + " Recipe");
                 }
             }
