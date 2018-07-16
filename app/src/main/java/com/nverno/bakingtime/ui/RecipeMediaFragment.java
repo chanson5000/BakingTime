@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class RecipeMediaFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private TextView mNoMedia;
 
+    private FragmentActivity mFragmentActivity;
+
     public RecipeMediaFragment() {
 
     }
@@ -51,7 +54,9 @@ public class RecipeMediaFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getActivity() != null) {
-            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+            mFragmentActivity = getActivity();
+            recipeViewModel = ViewModelProviders.of(mFragmentActivity)
+                    .get(RecipeViewModel.class);
         }
     }
 
@@ -72,7 +77,11 @@ public class RecipeMediaFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recipeViewModel.getSelectedRecipeStep().observe(this, new Observer<Step>() {
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        recipeViewModel.getSelectedRecipeStep().observe(mFragmentActivity, new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
                 if (step != null) {
@@ -117,16 +126,14 @@ public class RecipeMediaFragment extends Fragment {
             mPlayerView.setPlayer(mExoPlayer);
 
             // Prepare the media resource.
-            String userAgent = Util.getUserAgent(getActivity(), "RecipeStepMedia");
+            String userAgent = Util.getUserAgent(mFragmentActivity, "RecipeStepMedia");
 
-            if (getActivity() != null) {
-                MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
-                        new DefaultDataSourceFactory(getActivity(), userAgent),
-                        new DefaultExtractorsFactory(), null, null);
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
+                    new DefaultDataSourceFactory(mFragmentActivity, userAgent),
+                    new DefaultExtractorsFactory(), null, null);
 
-                mExoPlayer.prepare(mediaSource);
-                mExoPlayer.setPlayWhenReady(true);
-            }
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
         }
     }
 

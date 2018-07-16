@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,16 @@ import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
-import butterknife.BindView;
+import java.util.List;
 
 public class RecipeStepDetailFragment extends Fragment {
 
     private RecipeViewModel recipeViewModel;
     private TextView mTextRecipeStepInstruction;
-
     private Button mButtonPreviousStep;
-
     private Button mButtonNextStep;
+
+    private FragmentActivity mFragmentContext;
 
     public RecipeStepDetailFragment() {
 
@@ -35,7 +36,6 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
@@ -43,7 +43,8 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getActivity() != null) {
-            recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+            mFragmentContext = getActivity();
+            recipeViewModel = ViewModelProviders.of(mFragmentContext).get(RecipeViewModel.class);
         }
     }
 
@@ -79,12 +80,36 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recipeViewModel.getSelectedRecipeStep().observe(this, new Observer<Step>() {
+        recipeViewModel.getSelectedRecipeStep().observe(mFragmentContext, new Observer<Step>() {
+
             @Override
-            public void onChanged(@Nullable Step step) {
+            public void onChanged(@Nullable final Step step) {
                 if (step != null) {
                     mTextRecipeStepInstruction.setText(step.getDescription());
 
+                    recipeViewModel.getSelectedRecipeSteps().observe(mFragmentContext, new Observer<List<Step>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Step> steps) {
+                            if (steps != null && !steps.isEmpty()) {
+                                if (step.getStep() == 0) {
+                                    if (mButtonPreviousStep.isEnabled()) {
+                                        mButtonPreviousStep.setEnabled(false);
+                                    }
+                                } else if (step.getStep() == steps.size() - 1) {
+                                    if (mButtonNextStep.isEnabled()) {
+                                        mButtonNextStep.setEnabled(false);
+                                    }
+                                } else {
+                                    if (!mButtonPreviousStep.isEnabled()) {
+                                        mButtonPreviousStep.setEnabled(true);
+                                    }
+                                    if (!mButtonNextStep.isEnabled()) {
+                                        mButtonNextStep.setEnabled(true);
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });

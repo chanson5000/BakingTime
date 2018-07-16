@@ -1,13 +1,16 @@
 package com.nverno.bakingtime.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
@@ -29,9 +32,10 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar != null) {
+//        if (actionBar != null) {
             // This has hidden the action bar back navigation button which I consider redundant.
-            actionBar.setDisplayHomeAsUpEnabled(false);
+
+//                actionBar.setDisplayHomeAsUpEnabled(false);
 
             // An internet resource suggested using these as well but it seems I can just rid of it
             // using only the method above... even though the documentation description kind of
@@ -40,7 +44,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
             // actionBar.setHomeButtonEnabled(false);
             // actionBar.setDisplayShowHomeEnabled(false);
-        }
+//        }
 
         Intent parentIntent = getIntent();
 
@@ -59,7 +63,6 @@ public class RecipeDetailActivity extends AppCompatActivity
         if (findViewById(R.id.divider_vertical_constraint) != null) {
             mSmallLayout = true;
         }
-
     }
 
     private void initViewModel() {
@@ -67,7 +70,7 @@ public class RecipeDetailActivity extends AppCompatActivity
                 .get(RecipeViewModel.class);
     }
 
-    private void initViewModel(int recipeId) {
+    private void initViewModel(final int recipeId) {
         recipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
@@ -76,6 +79,15 @@ public class RecipeDetailActivity extends AppCompatActivity
         if (recipeViewModel.getSelectedRecipeStep().getValue() == null) {
             recipeViewModel.setSelectedRecipeStep(0);
         }
+
+        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe recipe) {
+                if (recipe != null) {
+                    setTitle(recipe.getName() + " Recipe");
+                }
+            }
+        });
     }
 
     public void onStepClick(Step step) {
