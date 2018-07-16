@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
+import com.nverno.bakingtime.adapter.StepsAdapter;
 import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
@@ -28,18 +28,18 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 import java.util.List;
 
 public class StepsListFragment extends Fragment
-        implements RecipeStepsAdapter.RecipeStepOnClickHandler {
+        implements StepsAdapter.RecipeStepOnClickHandler {
 
     private static String LOG_TAG = StepsListFragment.class.getSimpleName();
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
 
-    private RecipeStepsAdapter.RecipeStepOnClickHandler mClickHandler;
+    private StepsAdapter.RecipeStepOnClickHandler mClickHandler;
     private Context mContext;
     private RecipeViewModel recipeViewModel;
 
-    private RecipeStepsAdapter mStepsAdapter;
+    private StepsAdapter mStepsAdapter;
 
     private boolean mWideLayout;
 
@@ -56,7 +56,7 @@ public class StepsListFragment extends Fragment
         mContext = context;
 
         try {
-            mClickHandler = (RecipeStepsAdapter.RecipeStepOnClickHandler) context;
+            mClickHandler = (StepsAdapter.RecipeStepOnClickHandler) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement RecipeStepOnClickHandler");
@@ -84,7 +84,7 @@ public class StepsListFragment extends Fragment
 
         mRecyclerView.setHasFixedSize(true);
 
-        mStepsAdapter = new RecipeStepsAdapter(this);
+        mStepsAdapter = new StepsAdapter(this);
 
         mRecyclerView.setAdapter(mStepsAdapter);
 

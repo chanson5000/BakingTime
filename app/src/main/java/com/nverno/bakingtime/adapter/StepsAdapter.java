@@ -12,7 +12,7 @@ import com.nverno.bakingtime.model.Step;
 
 import java.util.List;
 
-public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsAdapterViewHolder> {
+public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapterViewHolder> {
 
     private List<Step> mSteps;
 
@@ -23,16 +23,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     }
 
 
-    public RecipeStepsAdapter(RecipeStepOnClickHandler clickHandler) {
+    public StepsAdapter(RecipeStepOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
-    public class RecipeStepsAdapterViewHolder extends RecyclerView.ViewHolder
+    public class StepsAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
         final TextView textView;
 
-        RecipeStepsAdapterViewHolder(View view) {
+        StepsAdapterViewHolder(View view) {
             super(view);
 
             textView = view.findViewById(R.id.recipe_step_description);
@@ -48,7 +48,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     }
 
     @NonNull
-    public RecipeStepsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public StepsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         int layoutId = R.layout.item_step_short_description;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
@@ -56,12 +56,13 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         view.setFocusable(true);
 
-        return new RecipeStepsAdapterViewHolder(view);
+        return new StepsAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeStepsAdapterViewHolder recipeStepsAdapterViewHolder, int position) {
-        recipeStepsAdapterViewHolder.textView.setText(mSteps.get(position).getShortDescription());
+    public void onBindViewHolder(@NonNull StepsAdapterViewHolder stepsAdapterViewHolder,
+                                 int position) {
+        stepsAdapterViewHolder.textView.setText(mSteps.get(position).getShortDescription());
     }
 
     @Override

@@ -8,14 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
+import com.nverno.bakingtime.adapter.StepsAdapter;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 
 public class RecipeDetailActivity extends AppCompatActivity
-        implements RecipeStepsAdapter.RecipeStepOnClickHandler {
+        implements StepsAdapter.RecipeStepOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
