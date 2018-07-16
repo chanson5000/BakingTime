@@ -22,6 +22,10 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     private final RecipeCardOnClickHandler mClickHandler;
 
+    public interface RecipeCardOnClickHandler {
+        void onCardClick(Recipe recipe);
+    }
+
     public RecipeCardAdapter(Context context, RecipeCardOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;

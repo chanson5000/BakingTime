@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
 import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
 import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
@@ -29,14 +28,14 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 import java.util.List;
 
 public class RecipeStepsFragment extends Fragment
-        implements RecipeStepOnClickHandler {
+        implements RecipeStepsAdapter.RecipeStepOnClickHandler {
 
     private static String LOG_TAG = RecipeStepsFragment.class.getSimpleName();
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
 
-    private RecipeStepOnClickHandler mClickHandler;
+    private RecipeStepsAdapter.RecipeStepOnClickHandler mClickHandler;
     private Context mContext;
     private RecipeViewModel recipeViewModel;
 
@@ -57,7 +56,7 @@ public class RecipeStepsFragment extends Fragment
         mContext = context;
 
         try {
-            mClickHandler = (RecipeStepOnClickHandler) context;
+            mClickHandler = (RecipeStepsAdapter.RecipeStepOnClickHandler) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement RecipeStepOnClickHandler");

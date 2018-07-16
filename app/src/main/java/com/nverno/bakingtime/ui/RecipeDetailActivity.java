@@ -5,18 +5,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.adapter.RecipeStepOnClickHandler;
+import com.nverno.bakingtime.adapter.RecipeStepsAdapter;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 
 public class RecipeDetailActivity extends AppCompatActivity
-        implements RecipeStepOnClickHandler {
+        implements RecipeStepsAdapter.RecipeStepOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";

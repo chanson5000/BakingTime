@@ -18,6 +18,11 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     private RecipeStepOnClickHandler mClickHandler;
 
+    public interface RecipeStepOnClickHandler {
+        void onStepClick(Step step);
+    }
+
+
     public RecipeStepsAdapter(RecipeStepOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }

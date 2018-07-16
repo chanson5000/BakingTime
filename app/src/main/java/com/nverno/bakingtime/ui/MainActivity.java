@@ -12,9 +12,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.RecipeCardAdapter;
-import com.nverno.bakingtime.adapter.RecipeCardOnClickHandler;
 import com.nverno.bakingtime.model.Recipe;
-import com.nverno.bakingtime.ui.RecipeDetailActivity;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements RecipeCardOnClickHandler {
+        implements RecipeCardAdapter.RecipeCardOnClickHandler {
 
     private static final String RECIPE_ID = "RECIPE_ID";
 
