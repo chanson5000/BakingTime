@@ -20,7 +20,7 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 import java.util.List;
 
-public class RecipeStepDetailFragment extends Fragment {
+public class StepDescriptionFragment extends Fragment {
 
     private RecipeViewModel recipeViewModel;
     private TextView mTextRecipeStepInstruction;
@@ -29,7 +29,7 @@ public class RecipeStepDetailFragment extends Fragment {
 
     private FragmentActivity mFragmentContext;
 
-    public RecipeStepDetailFragment() {
+    public StepDescriptionFragment() {
 
     }
 

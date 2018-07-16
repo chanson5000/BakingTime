@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/fragment_step_detail"
-        android:name="com.nverno.bakingtime.ui.RecipeStepDetailFragment"
+        android:name="com.nverno.bakingtime.ui.StepDescriptionFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible" />
