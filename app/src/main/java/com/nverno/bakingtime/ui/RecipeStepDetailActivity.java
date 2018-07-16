@@ -17,6 +17,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
 
+    private RecipeViewModel mRecipeViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,18 +45,39 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             if (bundle != null) {
                 initViewModel(bundle.getInt(RECIPE_ID), bundle.getInt(STEP_ID));
             }
+
+            parentIntent.removeExtra(RECIPE_ID);
+            parentIntent.removeExtra(STEP_ID);
+
+        } else {
+            initViewModel();
         }
+    }
+
+    private void initViewModel() {
+        mRecipeViewModel = ViewModelProviders.of(this)
+                .get(RecipeViewModel.class);
+
+        mRecipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe recipe) {
+                if (recipe != null) {
+                    setTitle(recipe.getName() + " Recipe");
+                }
+            }
+        });
+
     }
 
     // Initialize the view model to set the recipe and the current step.
     private void initViewModel(int recipeId, int stepId) {
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this)
+        mRecipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
-        recipeViewModel.setSelectedRecipe(recipeId);
-        recipeViewModel.setSelectedRecipeStep(stepId);
+        mRecipeViewModel.setSelectedRecipe(recipeId);
+        mRecipeViewModel.setSelectedRecipeStep(stepId);
 
-        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
+        mRecipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
             @Override
             public void onChanged(@Nullable Recipe recipe) {
                 if (recipe != null) {
