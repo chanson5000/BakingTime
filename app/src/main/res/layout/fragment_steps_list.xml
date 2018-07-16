@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/recipe_steps_ingredients"
         android:text="@string/ingredients"
-        style="@style/Text.List" />
+        style="@style/TextList" />
 
     <View
         style="@style/Divider.HorizontalNonConstraint" />
