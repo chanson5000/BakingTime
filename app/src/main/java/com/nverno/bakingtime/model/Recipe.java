@@ -89,4 +89,21 @@ public class Recipe {
         this.image = image;
     }
 
+    public String getIngredientsString() {
+        StringBuilder ingredientsString = new StringBuilder();
+        List<Ingredient> ingredientsList = this.ingredients;
+
+        // Iterate through the Ingredient list to make a readable string of ingredients.
+        for (int i = 0; i < ingredientsList.size(); i++) {
+            // For the last ingredient in the list, end sentence with a period.
+            if (i == ingredientsList.size() - 1) {
+                ingredientsString.append(ingredientsList.get(i).getName()).append(".");
+            } else {
+                // Adding a comma and space after each ingredient item.
+                ingredientsString.append(ingredientsList.get(i).getName()).append(", ");
+            }
+        }
+
+        return ingredientsString.toString();
+    }
 }
