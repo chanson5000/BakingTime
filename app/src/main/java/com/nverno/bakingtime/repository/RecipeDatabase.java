@@ -16,6 +16,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
     private static final String LOG_TAG = RecipeDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
     private static final String DATABASE_NAME = "recipes";
+
     private static RecipeDatabase sInstance;
 
     public static RecipeDatabase getInstance(Context context) {
@@ -27,7 +28,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
                         .build();
             }
         }
-        Log.d(LOG_TAG, "Getting Popular Movies database instance");
+        Log.d(LOG_TAG, "Getting Baking Time database instance.");
         return sInstance;
     }
 
