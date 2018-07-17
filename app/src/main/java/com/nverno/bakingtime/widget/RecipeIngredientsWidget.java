@@ -10,9 +10,10 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.nverno.bakingtime.R;
+import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.ui.MainActivity;
 import com.nverno.bakingtime.ui.RecipeDetailActivity;
-import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.util.WidgetHelper;
 
 /**
  * Implementation of App Widget functionality.
@@ -21,27 +22,21 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
     private static final String RECIPE_ID = "RECIPE_ID";
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                Recipe recipe, String ingredients, int appWidgetId) {
-
-        String recipeNameText;
-        String ingredientsText;
-
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.recipe_ingredients_widget);
 
-
         // The pending intent
         Intent intent;
 
-        if (recipe != null && ingredients != null) {
-            recipeNameText = recipe.getName();
-            ingredientsText = ingredients;
+        Recipe recipe = WidgetHelper.getInstance().getCurrentRecipe();
 
+        // If we have recipe data from the helper. (Recipe was selected in the activity UI)
+        if (recipe != null) {
             // Set the text views
-            views.setTextViewText(R.id.widget_text_ingredients_list, ingredientsText);
-            views.setTextViewText(R.id.widget_text_recipe_name, recipeNameText);
+            views.setTextViewText(R.id.widget_text_ingredients_list, recipe.getIngredientsString());
+            views.setTextViewText(R.id.widget_text_recipe_name, recipe.getName());
 
             // Set the visibility
             views.setViewVisibility(R.id.widget_text_static_no_recipe_selected, View.GONE);
@@ -49,6 +44,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
             views.setViewVisibility(R.id.widget_text_static_ingredients, View.VISIBLE);
             views.setViewVisibility(R.id.widget_text_ingredients_list, View.VISIBLE);
 
+            // Set our intent information for the activity.
             intent = new Intent(context, RecipeDetailActivity.class);
             intent.putExtra(RECIPE_ID, recipe.getId());
         } else {
@@ -62,7 +58,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        // This is the vanilla way to create a pending intent.
+        // This  commented code is the "vanilla" way to create a pending intent.
         // PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
         // intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -85,14 +81,14 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         // Always expect multiple instances exist and update them
 
-        WidgetUpdateService.startActionUpdateRecipeWidgets(context);
+        WidgetUpdateService.updateWidget(context);
     }
 
-    public static void updateRecipeIngredientsWidgets(Context context, AppWidgetManager appWidgetManager,
-                                                      Recipe recipe, String ingredients,
+    public static void updateRecipeIngredientsWidgets(Context context,
+                                                      AppWidgetManager appWidgetManager,
                                                       int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, recipe, ingredients, appWidgetId);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
@@ -111,4 +107,3 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-
