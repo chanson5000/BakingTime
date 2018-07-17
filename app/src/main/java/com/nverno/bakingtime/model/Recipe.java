@@ -1,17 +1,17 @@
 package com.nverno.bakingtime.model;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
+import com.nverno.bakingtime.util.DataConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Recipe {
-
     @PrimaryKey
     @Expose
     private int id;
@@ -26,11 +26,11 @@ public class Recipe {
     private String image;
 
     @Expose
-    @Ignore
+    @TypeConverters(DataConverter.class)
     private List<Ingredient> ingredients;
 
     @Expose
-    @Ignore
+    @TypeConverters(DataConverter.class)
     private List<Step> steps;
 
     public List<Ingredient> getIngredients() {
@@ -41,12 +41,20 @@ public class Recipe {
         return ingredients;
     }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public List<Step> getSteps() {
         if (steps == null) {
             steps = new ArrayList<>();
         }
 
         return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 
     public int getId() {
