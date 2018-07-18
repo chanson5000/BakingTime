@@ -24,7 +24,7 @@ public class Step {
     private int recipeId;
 
     @SerializedName("id")
-    private int step;
+    private int stepNumber;
 
     @Expose
     private String shortDescription;
@@ -46,12 +46,12 @@ public class Step {
         this.recipeId = recipeId;
     }
 
-    public int getStep() {
-        return step;
+    public int getStepNumber() {
+        return stepNumber;
     }
 
-    public void setStep(int step) {
-        this.step = step;
+    public void setStepNumber(int step) {
+        this.stepNumber = step;
     }
 
     public String getShortDescription() {
