@@ -21,7 +21,8 @@ public class RecipeViewModel extends AndroidViewModel {
 
     private LiveData<List<Recipe>> recipes;
     private LiveData<Recipe> selectedRecipe;
-    private MutableLiveData<Step> selectedRecipeStep;
+    private LiveData<Step> selectedRecipeStep;
+
     private LiveData<List<Step>> selectedRecipeSteps;
     private LiveData<List<Ingredient>> selectedRecipeIngredients;
 
@@ -31,10 +32,37 @@ public class RecipeViewModel extends AndroidViewModel {
         recipeRepository = new RecipeRepository(this.getApplication());
 
         recipes = recipeRepository.getAll();
+    }
 
+    public void setSelectedRecipe(final int recipeId) {
+        selectedRecipe = recipeRepository.getRecipeById(recipeId);
+        setSelectedRecipeSteps();
+        setSelectedRecipeIngredients();
+    }
+
+    private void setSelectedRecipeSteps() {
+        selectedRecipeSteps = Transformations.map(selectedRecipe, Recipe::getSteps);
+    }
+
+    private void setSelectedRecipeIngredients() {
+        selectedRecipeIngredients = Transformations.map(selectedRecipe, Recipe::getIngredients);
+    }
+
+    public void setSelectedRecipeStep(final int recipeStepNumber) {
+        selectedRecipeStep = Transformations.map(selectedRecipeSteps, steps -> {
+            for (Step step : steps) {
+                if (step.getStepNumber() == recipeStepNumber) {
+                    return step;
+                }
+            }
+            return null;
+        });
     }
 
     public LiveData<List<Recipe>> getRecipes() {
+        if (recipes == null) {
+            recipes = new MediatorLiveData<>();
+        }
         return recipes;
     }
 
@@ -45,46 +73,36 @@ public class RecipeViewModel extends AndroidViewModel {
         return selectedRecipe;
     }
 
-    public void setSelectedRecipe(final int recipeId) {
-        selectedRecipe = recipeRepository.getRecipeById(recipeId);
-        selectedRecipeIngredients = Transformations.map(selectedRecipe, Recipe::getIngredients);
-        selectedRecipeSteps = Transformations.map(selectedRecipe, Recipe::getSteps);
+    public LiveData<List<Step>> getSelectedRecipeSteps() {
+        if (selectedRecipeSteps == null) {
+            selectedRecipe = new MediatorLiveData<>();
+        }
+        return selectedRecipeSteps;
     }
 
-    public void setSelectedRecipeStep(final int recipeStepId) {
-        selectedRecipeStep.setValue(selectedRecipeSteps.getValue().get(recipeStepId));
+    public LiveData<List<Ingredient>> getSelectedRecipeIngredients() {
+        if (selectedRecipeIngredients == null) {
+            selectedRecipeIngredients = new MediatorLiveData<>();
+        }
+        return selectedRecipeIngredients;
     }
 
-    public MutableLiveData<Step> getSelectedRecipeStep() {
+    public LiveData<Step> getSelectedRecipeStep() {
         if (selectedRecipeStep == null) {
-            selectedRecipeStep = new MutableLiveData<>();
+            selectedRecipeStep = new MediatorLiveData<>();
         }
         return selectedRecipeStep;
     }
 
     public void nextRecipeStep() {
-        if (selectedRecipeStep.getValue() != null && selectedRecipeSteps.getValue() != null) {
-            if (selectedRecipeStep.getValue().getStepNumber() < selectedRecipeSteps.getValue().size()) {
-                setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() + 1);
-            }
+        if (selectedRecipeStep.getValue() != null) {
+            setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() + 1);
         }
     }
 
     public void previousRecipeStep() {
-        if (selectedRecipeStep.getValue() != null && selectedRecipeSteps.getValue() != null) {
-            if (selectedRecipeStep.getValue().getStepNumber() > 0) {
-                setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() - 1);
-            }
+        if (selectedRecipeStep.getValue() != null) {
+            setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() - 1);
         }
-    }
-
-    public LiveData<List<Ingredient>> getSelectedRecipeIngredients() {
-
-        return selectedRecipeIngredients;
-    }
-
-    public LiveData<List<Step>> getSelectedRecipeSteps() {
-
-        return selectedRecipeSteps;
     }
 }

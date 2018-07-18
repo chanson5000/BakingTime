@@ -55,7 +55,6 @@ public class StepDescriptionFragment extends Fragment {
         mButtonPreviousStep = rootView.findViewById(R.id.button_previous_step);
 
         mButtonNextStep.setOnClickListener(v -> recipeViewModel.nextRecipeStep());
-
         mButtonPreviousStep.setOnClickListener(v -> recipeViewModel.previousRecipeStep());
 
         return rootView;
