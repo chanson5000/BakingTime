@@ -29,30 +29,48 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RecipeRepository {
 
     private static final String LOG_TAG = RecipeRepository.class.getSimpleName();
+    private static boolean sDatabaseUpdated;
 
     private final RecipeDatabase mRecipeDatabase;
-
     private final Context mContext;
-
-    private static boolean sDatabaseUpdated;
 
     public RecipeRepository(Context context) {
         mRecipeDatabase = RecipeDatabase.getInstance(context);
-
         mContext = context;
-
         loadData();
+    }
+
+    public LiveData<Recipe> getRecipeById(int recipeId) {
+        return mRecipeDatabase.recipeDao().getRecipeById(recipeId);
+    }
+
+    public LiveData<List<Recipe>> getAll() {
+        return mRecipeDatabase.recipeDao().getAll();
+    }
+
+    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeId) {
+        return mRecipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
+    }
+
+    public LiveData<List<Ingredient>> getAllIngredients() {
+        return mRecipeDatabase.ingredientDao().getAll();
+    }
+
+    public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
+        return mRecipeDatabase.stepDao().getStepsForRecipe(recipeId);
     }
 
     private void loadData() {
 
-        if (networkNotAvailable(mContext)) {
-            Log.d(LOG_TAG, "Skipping data fetch, network not available.");
+        // Check to see if database has already been updated.
+        if (sDatabaseUpdated) {
+            Log.d(LOG_TAG, "Skipped data fetched, already fetched.");
             return;
         }
 
-        if (sDatabaseUpdated) {
-            Log.d(LOG_TAG, "Skipped data fetched, already fetched.");
+        // Check to see if network is available.
+        if (networkNotAvailable(mContext)) {
+            Log.d(LOG_TAG, "Skipping data fetch, network not available.");
             return;
         }
 
@@ -60,28 +78,38 @@ public class RecipeRepository {
 
         Call<List<Recipe>> call = remoteData.recipes();
 
+        // Attempting to retrieve our data from the internet.
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(@NonNull Call<List<Recipe>> call,
                                    @NonNull Response<List<Recipe>> response) {
+
                 switch (response.code()) {
+
+                    // Server code is "Not Found"
                     case 404:
                         Log.e(LOG_TAG, "Server return \"Not Found\" error.");
                         break;
+
+                    // Server code is successful.
                     case 200:
                         final List<Recipe> recipes = response.body();
 
                         if (recipes != null && !recipes.isEmpty()) {
-                            final List<Recipe> modRecipes = fillInBlanks(recipes);
+                            final List<Recipe> modRecipes = fixMissingData(recipes);
                             Log.d(LOG_TAG, "Successfully fetched data.");
 
+                            // Updating the recipe database with our internet data in new thread.
                             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mRecipeDatabase.recipeDao().insertMany(fillInBlanks(modRecipes));
+                                    // Using "fixMissingData" for injecting images that weren't included.
+                                    mRecipeDatabase.recipeDao().insertMany(fixMissingData(modRecipes));
                                 }
                             });
 
+                            // Iterating through the recipe object to insert ingredients and
+                            // steps data into the database.
                             for (Recipe recipe : recipes) {
 
                                 final List<Ingredient> ingredients = recipe.getIngredients();
@@ -96,7 +124,6 @@ public class RecipeRepository {
                                     step.setRecipeId(recipe.getId());
                                 }
 
-
                                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                     @Override
                                     public void run() {
@@ -105,7 +132,6 @@ public class RecipeRepository {
                                     }
                                 });
                             }
-
                             sDatabaseUpdated = true;
                         } else {
                             Log.d(LOG_TAG, "Failed to fetch internet data: empty response.");
@@ -125,18 +151,12 @@ public class RecipeRepository {
         });
     }
 
-    private List<Step> fixStepIndexes(List<Step> steps) {
-        for (int stepOrder = 0; stepOrder < steps.size(); stepOrder++) {
-            if (steps.get(stepOrder).getStep() != stepOrder) {
-                steps.get(stepOrder).setStep(stepOrder);
-            }
-        }
-        return steps;
-    }
-
-    private List<Recipe> fillInBlanks(List<Recipe> recipes) {
+    private List<Recipe> fixMissingData(List<Recipe> internetRecipes) {
         String localRecipeData;
+
+        // Populate localRecipeData for conversion to JSON Array.
         try {
+            // Our existing local version of the data for custom or missing data.
             InputStream is = mContext.getAssets().open("baking.json");
             int size = is.available();
             byte[] buffer = new byte[size];
@@ -148,22 +168,29 @@ public class RecipeRepository {
             return null;
         }
 
+        // Converting to the JSON Array for iteration.
         try {
-            JSONArray jsonArray = new JSONArray(localRecipeData);
+            JSONArray localRecipesArray = new JSONArray(localRecipeData);
 
-            int length = jsonArray.length();
+            int length = localRecipesArray.length();
 
+            // Iterating through our custom local data and the internet data to make any
+            // changes we would like.
             for (int i = 0; i < length; i++) {
-                JSONObject jsonRecipe = jsonArray.getJSONObject(i);
+                JSONObject localRecipe = localRecipesArray.getJSONObject(i);
 
-                for (Recipe recipe : recipes) {
-                    if (recipe.getId() == jsonRecipe.getInt("id")) {
-                        recipe.setImage(jsonRecipe.getString("image"));
+                // Adding custom images in this case.
+                // Iterates through all items in list until it finds matching Id.
+                // Note: Not using .get(Index) in case order has somehow changed,
+                // and not using .stream() because of API level.
+                for (Recipe internetRecipe : internetRecipes) {
+                    if (internetRecipe.getId() == localRecipe.getInt("id")) {
+                        internetRecipe.setImage(localRecipe.getString("image"));
                     }
                 }
             }
 
-            return recipes;
+            return internetRecipes;
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -171,20 +198,13 @@ public class RecipeRepository {
         }
     }
 
-    public LiveData<List<Recipe>> getAll() {
-        return mRecipeDatabase.recipeDao().getAll();
-    }
-
-    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeId) {
-        return mRecipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
-    }
-
-    public LiveData<List<Ingredient>> getAllIngredients() {
-        return mRecipeDatabase.ingredientDao().getAll();
-    }
-
-    public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
-        return mRecipeDatabase.stepDao().getStepsForRecipe(recipeId);
+    private List<Step> fixStepIndexes(List<Step> steps) {
+        for (int stepOrder = 0; stepOrder < steps.size(); stepOrder++) {
+            if (steps.get(stepOrder).getStepNumber() != stepOrder) {
+                steps.get(stepOrder).setStepNumber(stepOrder);
+            }
+        }
+        return steps;
     }
 
     private boolean networkNotAvailable(Context context) {

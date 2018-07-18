@@ -19,13 +19,9 @@ import android.widget.TextView;
 
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.StepsAdapter;
-import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
 import com.nverno.bakingtime.model.Step;
-import com.nverno.bakingtime.util.IngredientStringHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
-
-import java.util.List;
 
 public class StepsListFragment extends Fragment
         implements StepsAdapter.RecipeStepOnClickHandler {
@@ -41,7 +37,7 @@ public class StepsListFragment extends Fragment
 
     private StepsAdapter mStepsAdapter;
 
-    private boolean mWideLayout;
+    private boolean mLargeScreen;
 
     private TextView mTextIngredients;
 
@@ -54,13 +50,6 @@ public class StepsListFragment extends Fragment
         super.onAttach(context);
 
         mContext = context;
-
-        try {
-            mClickHandler = (StepsAdapter.RecipeStepOnClickHandler) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement RecipeStepOnClickHandler");
-        }
     }
 
     @Override
@@ -103,7 +92,7 @@ public class StepsListFragment extends Fragment
         FragmentActivity activity = getActivity();
 
         if (activity.findViewById(R.id.divider_vertical_constraint) != null) {
-            mWideLayout = true;
+            mLargeScreen = true;
         }
 
         initViewModel(activity);
@@ -113,39 +102,23 @@ public class StepsListFragment extends Fragment
 
         recipeViewModel = ViewModelProviders.of(activity).get(RecipeViewModel.class);
 
-        recipeViewModel.getSelectedRecipeSteps().observe(this, new Observer<List<Step>>() {
-            @Override
-            public void onChanged(@Nullable List<Step> steps) {
-                if (steps != null && !steps.isEmpty()) {
-                    mStepsAdapter.setStepsData(steps);
-                }
+        recipeViewModel.getSelectedRecipe().observe(this, recipe -> {
+            if (recipe != null && !recipe.getSteps().isEmpty()) {
+                mStepsAdapter.setStepsData(recipe.getSteps());
             }
         });
 
-        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
-                if (recipe != null) {
-                    IngredientStringHelper.getInstance().setCurrentRecipe(getActivity(),
-                            recipe);
-
-                }
-            }
-        });
-
-//        recipeViewModel.getSelectedRecipeIngredients().observe(this, new Observer<List<Ingredient>>() {
+//        recipeViewModel.getSelectedRecipeSteps().observe(this, new Observer<List<Step>>() {
 //            @Override
-//            public void onChanged(@Nullable List<Ingredient> ingredients) {
-//                if (ingredients != null && !ingredients.isEmpty()) {
-//                    String ingredientString = "Ingredients: " +
-//                            IngredientStringHelper.getInstance()
-//                                    .ListToFormattedString(getActivity(), ingredients);
-//
-//                    mTextIngredients.setText(ingredientString);
+//            public void onChanged(@Nullable List<Step> steps) {
+//                if (steps != null && !steps.isEmpty()) {
+//                    mStepsAdapter.setStepsData(steps);
 //                }
 //            }
 //        });
     }
+
+    // TODO: Add click listener for ingredients fragment.
 
     public void onStepClick(Step step) {
         if (step == null) {
@@ -153,15 +126,16 @@ public class StepsListFragment extends Fragment
             return;
         }
 
-        recipeViewModel.setSelectedRecipeStep(step.getStep());
-
-        if (!mWideLayout) {
+        // If the screen layout is not large, we will launch a new Activity.
+        if (!mLargeScreen) {
             Intent intent = new Intent(getContext(), StepDetailActivity.class);
 
             intent.putExtra(RECIPE_ID, step.getRecipeId());
-            intent.putExtra(STEP_ID, step.getStep());
+            intent.putExtra(STEP_ID, step.getStepNumber());
 
             startActivity(intent);
+        } else {
+            recipeViewModel.setSelectedRecipeStep(step.getStepNumber());
         }
     }
 }

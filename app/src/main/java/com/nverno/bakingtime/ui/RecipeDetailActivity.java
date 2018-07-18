@@ -8,19 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.adapter.StepsAdapter;
-import com.nverno.bakingtime.model.Ingredient;
 import com.nverno.bakingtime.model.Recipe;
-import com.nverno.bakingtime.model.Step;
-import com.nverno.bakingtime.util.IngredientStringHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
-import com.nverno.bakingtime.widget.RecipeIngredientsWidget;
 
-import java.util.List;
-
-
-public class RecipeDetailActivity extends AppCompatActivity
-        implements StepsAdapter.RecipeStepOnClickHandler {
+public class RecipeDetailActivity extends AppCompatActivity {
 
     private static final String RECIPE_ID = "RECIPE_ID";
     private static final String STEP_ID = "STEP_ID";
@@ -33,22 +24,6 @@ public class RecipeDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-
-//        ActionBar actionBar = getSupportActionBar();
-
-//        if (actionBar != null) {
-            // This has hidden the action bar back navigation button which I consider redundant.
-
-//                actionBar.setDisplayHomeAsUpEnabled(false);
-
-            // An internet resource suggested using these as well but it seems I can just rid of it
-            // using only the method above... even though the documentation description kind of
-            // suggests that the following methods may also have something to do with it.
-            // Sort of confused on this one, maybe figure out details later but it works for now.
-
-            // actionBar.setHomeButtonEnabled(false);
-            // actionBar.setDisplayShowHomeEnabled(false);
-//        }
 
         Intent parentIntent = getIntent();
 
@@ -80,35 +55,16 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         recipeViewModel.setSelectedRecipe(recipeId);
 
+        // If we have no selected recipe yet, default to 0 (Introduction).
         if (recipeViewModel.getSelectedRecipeStep().getValue() == null) {
             recipeViewModel.setSelectedRecipeStep(0);
         }
 
-        recipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
-                if (recipe != null) {
-
-                    List<Ingredient> ingredients = recipeViewModel.getSelectedRecipeIngredients().getValue();
-
-//                    RecipeIngredientsWidget.updateRecipeIngredientsWidgets(this, );
-
-                    setTitle(recipe.getName() + " Recipe");
-                }
+        // Setting the title/action bar to the recipe name.
+        recipeViewModel.getSelectedRecipe().observe(this, recipe -> {
+            if (recipe != null) {
+                setTitle(recipe.getName() + " Recipe");
             }
         });
-    }
-
-    public void onStepClick(Step step) {
-        if (mSmallLayout) {
-            Intent intent = new Intent(this, StepDetailActivity.class);
-
-            if (step != null) {
-                intent.putExtra(RECIPE_ID, step.getRecipeId());
-                intent.putExtra(STEP_ID, step.getStep());
-            }
-
-            startActivity(intent);
-        }
     }
 }

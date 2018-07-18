@@ -81,22 +81,19 @@ public class StepMediaFragment extends Fragment {
     }
 
     private void initViewModel() {
-        recipeViewModel.getSelectedRecipeStep().observe(mFragmentActivity, new Observer<Step>() {
-            @Override
-            public void onChanged(@Nullable Step step) {
-                if (step != null) {
-                    if (mExoPlayer != null) {
-                        releasePlayer();
-                    }
-                    if (!step.getVideoURL().isEmpty()) {
-                        playerVisible();
-                        initializePlayer(Uri.parse(step.getVideoURL()));
-                    } else if (!step.getThumbnailURL().isEmpty()) {
-                        playerVisible();
-                        initializePlayer(Uri.parse(step.getThumbnailURL()));
-                    } else {
-                        noMedia();
-                    }
+        recipeViewModel.getSelectedRecipeStep().observe(mFragmentActivity, step -> {
+            if (step != null) {
+                if (mExoPlayer != null) {
+                    releasePlayer();
+                }
+                if (!step.getVideoURL().isEmpty()) {
+                    playerVisible();
+                    initializePlayer(Uri.parse(step.getVideoURL()));
+                } else if (!step.getThumbnailURL().isEmpty()) {
+                    playerVisible();
+                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+                } else {
+                    noMedia();
                 }
             }
         });

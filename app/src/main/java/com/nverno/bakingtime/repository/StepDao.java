@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface StepDao {
 
-    @Query("SELECT * FROM step WHERE recipeId IS :id ORDER BY step ASC")
+    @Query("SELECT * FROM step WHERE recipeId IS :id ORDER BY stepNumber ASC")
     LiveData<List<Step>> getStepsForRecipe(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

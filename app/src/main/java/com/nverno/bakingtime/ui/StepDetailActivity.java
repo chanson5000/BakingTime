@@ -58,12 +58,9 @@ public class StepDetailActivity extends AppCompatActivity {
         mRecipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
-        mRecipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
-                if (recipe != null) {
-                    setTitle(recipe.getName() + " Recipe");
-                }
+        mRecipeViewModel.getSelectedRecipe().observe(this, recipe -> {
+            if (recipe != null) {
+                setTitle(recipe.getName() + " Recipe");
             }
         });
 
@@ -77,12 +74,9 @@ public class StepDetailActivity extends AppCompatActivity {
         mRecipeViewModel.setSelectedRecipe(recipeId);
         mRecipeViewModel.setSelectedRecipeStep(stepId);
 
-        mRecipeViewModel.getSelectedRecipe().observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable Recipe recipe) {
-                if (recipe != null) {
-                    setTitle(recipe.getName() + " Recipe");
-                }
+        mRecipeViewModel.getSelectedRecipe().observe(this, recipe -> {
+            if (recipe != null) {
+                setTitle(recipe.getName() + " Recipe");
             }
         });
     }

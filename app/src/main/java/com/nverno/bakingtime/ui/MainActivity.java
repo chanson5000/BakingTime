@@ -56,12 +56,9 @@ public class MainActivity extends AppCompatActivity
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this)
                 .get(RecipeViewModel.class);
 
-        recipeViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                if (recipes != null && !recipes.isEmpty()) {
-                mRecipeCardAdapter.setRecipeData(recipes);
-                }
+        recipeViewModel.getRecipes().observe(this, recipes -> {
+            if (recipes != null && !recipes.isEmpty()) {
+            mRecipeCardAdapter.setRecipeData(recipes);
             }
         });
     }
