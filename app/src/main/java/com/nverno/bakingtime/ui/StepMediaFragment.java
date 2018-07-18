@@ -1,12 +1,10 @@
 package com.nverno.bakingtime.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -27,37 +25,26 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.model.Step;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class StepMediaFragment extends Fragment {
 
-    private RecipeViewModel recipeViewModel;
-
-    private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
-    private TextView mNoMedia;
-
     private FragmentActivity mFragmentActivity;
 
-    public StepMediaFragment() {
-
-    }
+    private SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayerView mViewVideoPlayer;
+    private TextView mTxtNoMedia;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        mFragmentActivity = getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getActivity() != null) {
-            mFragmentActivity = getActivity();
-            recipeViewModel = ViewModelProviders.of(mFragmentActivity)
-                    .get(RecipeViewModel.class);
-        }
     }
 
     @Override
@@ -67,8 +54,8 @@ public class StepMediaFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_step_media,
                 container, false);
 
-        mPlayerView = rootView.findViewById(R.id.recipe_step_media);
-        mNoMedia = rootView.findViewById(R.id.recipe_no_media);
+        mViewVideoPlayer = rootView.findViewById(R.id.recipe_step_media);
+        mTxtNoMedia = rootView.findViewById(R.id.recipe_no_media);
 
         return rootView;
     }
@@ -81,7 +68,10 @@ public class StepMediaFragment extends Fragment {
     }
 
     private void initViewModel() {
-        recipeViewModel.getSelectedRecipeStep().observe(mFragmentActivity, step -> {
+        RecipeViewModel recipeViewModel
+                = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+
+        recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
                 if (mExoPlayer != null) {
                     releasePlayer();
@@ -100,13 +90,13 @@ public class StepMediaFragment extends Fragment {
     }
 
     private void playerVisible() {
-        mNoMedia.setVisibility(View.GONE);
-        mPlayerView.setVisibility(View.VISIBLE);
+        mTxtNoMedia.setVisibility(View.GONE);
+        mViewVideoPlayer.setVisibility(View.VISIBLE);
     }
 
     private void noMedia() {
-        mPlayerView.setVisibility(View.GONE);
-        mNoMedia.setVisibility(View.VISIBLE);
+        mViewVideoPlayer.setVisibility(View.GONE);
+        mTxtNoMedia.setVisibility(View.VISIBLE);
     }
 
     private void initializePlayer(Uri mediaUri) {
@@ -120,10 +110,11 @@ public class StepMediaFragment extends Fragment {
                     trackSelector,
                     loadControl);
 
-            mPlayerView.setPlayer(mExoPlayer);
+            mViewVideoPlayer.setPlayer(mExoPlayer);
 
             // Prepare the media resource.
-            String userAgent = Util.getUserAgent(mFragmentActivity, "RecipeStepMedia");
+            String userAgent
+                    = Util.getUserAgent(mFragmentActivity, "RecipeStepMedia");
 
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
                     new DefaultDataSourceFactory(mFragmentActivity, userAgent),
@@ -147,17 +138,4 @@ public class StepMediaFragment extends Fragment {
             releasePlayer();
         }
     }
-
-    // Optional
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        releasePlayer();
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        releasePlayer();
-//    }
 }
