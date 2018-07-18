@@ -94,15 +94,39 @@ public class RecipeViewModel extends AndroidViewModel {
         return selectedRecipeStep;
     }
 
-    public void nextRecipeStep() {
-        if (selectedRecipeStep.getValue() != null) {
-            setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() + 1);
+    private void incrementRecipeStep() {
+        if (selectedRecipeStep.getValue() == null) {
+            return;
         }
+        selectedRecipeStep = Transformations.map(selectedRecipeSteps, steps -> {
+            for (Step step : steps) {
+                if (step.getStepNumber() == selectedRecipeStep.getValue().getStepNumber() - 1) {
+                    return step;
+                }
+            }
+            return null;
+        });
+    }
+
+    private void decrementRecipeStep() {
+        if (selectedRecipeStep.getValue() == null) {
+            return;
+        }
+        selectedRecipeStep = Transformations.map(selectedRecipeSteps, steps -> {
+            for (Step step : steps) {
+                if (step.getStepNumber() == selectedRecipeStep.getValue().getStepNumber() - 1 ) {
+                    return step;
+                }
+            }
+            return null;
+        });
+    }
+
+    public void nextRecipeStep() {
+        incrementRecipeStep();
     }
 
     public void previousRecipeStep() {
-        if (selectedRecipeStep.getValue() != null) {
-            setSelectedRecipeStep(selectedRecipeStep.getValue().getStepNumber() - 1);
-        }
+        decrementRecipeStep();
     }
 }
