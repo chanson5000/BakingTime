@@ -17,30 +17,22 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class StepDescriptionFragment extends Fragment {
 
-    private RecipeViewModel recipeViewModel;
+    private RecipeViewModel mRecipeViewModel;
+    private FragmentActivity mFragmentActivity;
+
     private TextView mTextRecipeStepInstruction;
-    private Button mButtonPreviousStep;
-    private Button mButtonNextStep;
-
-    private FragmentActivity mFragmentContext;
-
-    public StepDescriptionFragment() {
-
-    }
+    private Button mBtnPreviousStep;
+    private Button mBtnNextStep;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mFragmentActivity = getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getActivity() != null) {
-            mFragmentContext = getActivity();
-            recipeViewModel = ViewModelProviders.of(mFragmentContext).get(RecipeViewModel.class);
-        }
     }
 
     @Override
@@ -51,11 +43,10 @@ public class StepDescriptionFragment extends Fragment {
                 container, false);
 
         mTextRecipeStepInstruction = rootView.findViewById(R.id.recipe_step_instructions);
-        mButtonNextStep = rootView.findViewById(R.id.button_next_step);
-        mButtonPreviousStep = rootView.findViewById(R.id.button_previous_step);
-
-        mButtonNextStep.setOnClickListener(v -> recipeViewModel.nextRecipeStep());
-        mButtonPreviousStep.setOnClickListener(v -> recipeViewModel.previousRecipeStep());
+        mBtnNextStep = rootView.findViewById(R.id.button_next_step);
+        mBtnPreviousStep = rootView.findViewById(R.id.button_previous_step);
+        mBtnNextStep.setOnClickListener(v -> mRecipeViewModel.nextRecipeStep());
+        mBtnPreviousStep.setOnClickListener(v -> mRecipeViewModel.previousRecipeStep());
 
         return rootView;
     }
@@ -64,26 +55,33 @@ public class StepDescriptionFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recipeViewModel.getSelectedRecipeStep().observe(mFragmentContext, step -> {
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        mRecipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+
+        mRecipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
                 mTextRecipeStepInstruction.setText(step.getDescription());
 
-                recipeViewModel.getSelectedRecipeSteps().observe(mFragmentContext, steps -> {
+                mRecipeViewModel.getSelectedRecipeSteps().observe(this, steps -> {
                     if (steps != null && !steps.isEmpty()) {
+                        // Enable or disable Next and Previous buttons based on step number.
                         if (step.getStepNumber() == 0) {
-                            if (mButtonPreviousStep.isEnabled()) {
-                                mButtonPreviousStep.setEnabled(false);
+                            if (mBtnPreviousStep.isEnabled()) {
+                                mBtnPreviousStep.setEnabled(false);
                             }
                         } else if (step.getStepNumber() == steps.size() - 1) {
-                            if (mButtonNextStep.isEnabled()) {
-                                mButtonNextStep.setEnabled(false);
+                            if (mBtnNextStep.isEnabled()) {
+                                mBtnNextStep.setEnabled(false);
                             }
                         } else {
-                            if (!mButtonPreviousStep.isEnabled()) {
-                                mButtonPreviousStep.setEnabled(true);
+                            if (!mBtnPreviousStep.isEnabled()) {
+                                mBtnPreviousStep.setEnabled(true);
                             }
-                            if (!mButtonNextStep.isEnabled()) {
-                                mButtonNextStep.setEnabled(true);
+                            if (!mBtnNextStep.isEnabled()) {
+                                mBtnNextStep.setEnabled(true);
                             }
                         }
                     }
