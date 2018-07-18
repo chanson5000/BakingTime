@@ -100,12 +100,9 @@ public class RecipeRepository {
                             Log.d(LOG_TAG, "Successfully fetched data.");
 
                             // Updating the recipe database with our internet data in new thread.
-                            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Using "fixMissingData" for injecting images that weren't included.
-                                    mRecipeDatabase.recipeDao().insertMany(fixMissingData(modRecipes));
-                                }
+                            AppExecutors.getInstance().diskIO().execute(() -> {
+                                // Using "fixMissingData" for injecting images that weren't included.
+                                mRecipeDatabase.recipeDao().insertMany(fixMissingData(modRecipes));
                             });
 
                             // Iterating through the recipe object to insert ingredients and
@@ -124,12 +121,9 @@ public class RecipeRepository {
                                     step.setRecipeId(recipe.getId());
                                 }
 
-                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mRecipeDatabase.ingredientDao().insertMany(ingredients);
-                                        mRecipeDatabase.stepDao().insertMany(steps);
-                                    }
+                                AppExecutors.getInstance().diskIO().execute(() -> {
+                                    mRecipeDatabase.ingredientDao().insertMany(ingredients);
+                                    mRecipeDatabase.stepDao().insertMany(steps);
                                 });
                             }
                             sDatabaseUpdated = true;
