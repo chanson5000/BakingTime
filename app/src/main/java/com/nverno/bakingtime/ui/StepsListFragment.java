@@ -97,7 +97,7 @@ public class StepsListFragment extends Fragment
                 startActivity(intent);
             }
         } else {
-            mFragmentViewChanger.fragmentViewOne();
+            mFragmentViewChanger.ingredientsView();
         }
     }
 
@@ -111,7 +111,7 @@ public class StepsListFragment extends Fragment
 
             startActivity(intent);
         } else {
-            mFragmentViewChanger.fragmentViewTwo();
+            mFragmentViewChanger.detailsView();
             recipeViewModel.setSelectedRecipeStep(step.getStepNumber());
         }
     }
