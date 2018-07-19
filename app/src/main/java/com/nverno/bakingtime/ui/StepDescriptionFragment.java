@@ -72,9 +72,15 @@ public class StepDescriptionFragment extends Fragment {
                             if (mBtnPreviousStep.isEnabled()) {
                                 mBtnPreviousStep.setEnabled(false);
                             }
+                            if (!mBtnNextStep.isEnabled()) {
+                                mBtnNextStep.setEnabled(true);
+                            }
                         } else if (step.getStepNumber() == steps.size() - 1) {
                             if (mBtnNextStep.isEnabled()) {
                                 mBtnNextStep.setEnabled(false);
+                            }
+                            if (!mBtnPreviousStep.isEnabled()) {
+                                mBtnPreviousStep.setEnabled(true);
                             }
                         } else {
                             if (!mBtnPreviousStep.isEnabled()) {
