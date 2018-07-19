@@ -9,7 +9,6 @@
         android:id="@+id/recipe_step_description"
         style="@style/TextList" />
 
-    <View
-        style="@style/Divider.HorizontalNonConstraint" />
+    <View style="@style/Divider.HorizontalNonConstraint" />
 
 </LinearLayout>

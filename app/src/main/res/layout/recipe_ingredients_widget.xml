@@ -1,32 +1,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_linear_layout"
-    android:theme="@style/AppTheme"
-    android:background="@drawable/widget_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/widget_bg"
     android:gravity="center"
-    android:padding="@dimen/widget_margin">
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin"
+    android:theme="@style/AppTheme">
 
     <TextView
         android:id="@+id/widget_text_static_no_recipe_selected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_recipe_selected"
         android:layout_margin="5dp"
+        android:text="@string/no_recipe_selected"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/widget_text_recipe_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:text="@string/no_recipe_selected"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:text="@string/no_recipe_selected"
         android:textStyle="bold"
         android:visibility="gone" />
 
@@ -34,9 +33,9 @@
         android:id="@+id/widget_text_static_ingredients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="@string/ingredients"
         android:layout_marginBottom="5dp"
+        android:text="@string/ingredients"
+        android:textAlignment="center"
         android:textSize="12sp"
         android:textStyle="bold"
         android:visibility="gone" />
@@ -45,9 +44,9 @@
         android:id="@+id/widget_text_ingredients_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
         android:layout_marginBottom="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginStart="3dp"
         android:textAlignment="center"
         android:textSize="12sp"
         android:textStyle="italic"
