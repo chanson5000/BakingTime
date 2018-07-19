@@ -30,6 +30,11 @@
             android:parentActivityName=".ui.RecipeDetailActivity"
             android:launchMode="singleTop" />
 
+        <activity
+            android:name=".ui.IngredientListActivity"
+            android:parentActivityName=".ui.RecipeDetailActivity"
+            android:launchMode="singleTop" />
+
         <receiver android:name=".widget.RecipeIngredientsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
