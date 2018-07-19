@@ -32,12 +32,9 @@ public class IngredientsAdapter
     @NonNull
     public IngredientsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup,
                                                            int viewType) {
-
         int layoutId = R.layout.item_ingredient_detail;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-
         View view = inflater.inflate(layoutId, viewGroup, false);
-
         view.setFocusable(true);
 
         return new IngredientsAdapterViewHolder(view);

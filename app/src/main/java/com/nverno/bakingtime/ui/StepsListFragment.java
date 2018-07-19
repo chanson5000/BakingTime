@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.StepsAdapter;
 import com.nverno.bakingtime.model.Step;
+import com.nverno.bakingtime.util.FragmentViewChanger;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class StepsListFragment extends Fragment
@@ -32,11 +33,14 @@ public class StepsListFragment extends Fragment
     private boolean mLargeLayout;
     private TextView mTextIngredients;
 
+    private FragmentViewChanger mFragmentViewChanger;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
 
+        mFragmentViewChanger = (FragmentViewChanger) context;
         mFragmentActivity = getActivity();
     }
 
@@ -52,6 +56,7 @@ public class StepsListFragment extends Fragment
                 = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
         mTextIngredients = rootView.findViewById(R.id.recipe_steps_ingredients);
+        mTextIngredients.setOnClickListener(v -> onIngredientClick());
         RecyclerView recyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setHasFixedSize(true);
@@ -82,7 +87,19 @@ public class StepsListFragment extends Fragment
         });
     }
 
-    // TODO: Add click listener for ingredients fragment.
+    public void onIngredientClick() {
+        if (!mLargeLayout) {
+            Intent intent = new Intent(getContext(), IngredientListActivity.class);
+
+            if (recipeViewModel.getSelectedRecipe().getValue() != null) {
+                intent.putExtra(RECIPE_ID, recipeViewModel.getSelectedRecipe().getValue().getId());
+
+                startActivity(intent);
+            }
+        } else {
+            mFragmentViewChanger.fragmentViewOne();
+        }
+    }
 
     public void onStepClick(Step step) {
         // If the screen layout is not large, we will launch a new Activity.
@@ -94,6 +111,7 @@ public class StepsListFragment extends Fragment
 
             startActivity(intent);
         } else {
+            mFragmentViewChanger.fragmentViewTwo();
             recipeViewModel.setSelectedRecipeStep(step.getStepNumber());
         }
     }

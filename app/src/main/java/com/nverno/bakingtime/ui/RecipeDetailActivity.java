@@ -3,16 +3,52 @@ package com.nverno.bakingtime.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
+import com.nverno.bakingtime.util.FragmentViewChanger;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailActivity extends AppCompatActivity implements FragmentViewChanger {
 
     private static final String RECIPE_ID = "RECIPE_ID";
 
     private RecipeViewModel mRecipeViewModel;
+
+    private FragmentManager fm;
+
+    private Fragment ingredientListFragment;
+    private Fragment mediaFragment;
+    private Fragment descriptionFragment;
+
+    public void fragmentViewOne() {
+        fm = getSupportFragmentManager();
+
+        ingredientListFragment = fm.findFragmentById(R.id.fragment_ingredients_list);
+        mediaFragment = fm.findFragmentById(R.id.fragment_step_media);
+        descriptionFragment = fm.findFragmentById(R.id.fragment_step_detail);
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.show(ingredientListFragment).hide(mediaFragment).hide(descriptionFragment).commit();
+    }
+
+    public void fragmentViewTwo() {
+        fm = getSupportFragmentManager();
+
+        ingredientListFragment = fm.findFragmentById(R.id.fragment_ingredients_list);
+        mediaFragment = fm.findFragmentById(R.id.fragment_step_media);
+        descriptionFragment = fm.findFragmentById(R.id.fragment_step_detail);
+
+
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        ft.show(mediaFragment).show(descriptionFragment).hide(ingredientListFragment).commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

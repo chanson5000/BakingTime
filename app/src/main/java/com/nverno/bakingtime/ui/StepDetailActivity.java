@@ -3,10 +3,14 @@ package com.nverno.bakingtime.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
+import com.nverno.bakingtime.util.FragmentViewChanger;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class StepDetailActivity extends AppCompatActivity {
@@ -45,20 +49,15 @@ public class StepDetailActivity extends AppCompatActivity {
             // Remove extras to prevent resetting our ViewModel.
             parentIntent.removeExtra(RECIPE_ID);
             parentIntent.removeExtra(STEP_ID);
-
         } else {
+
             initViewModel();
         }
     }
 
     private void initViewModel() {
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-
-        mRecipeViewModel.getSelectedRecipe().observe(this, recipe -> {
-            if (recipe != null) {
-                setTitle(recipe.getName() + " Recipe");
-            }
-        });
+        setTitleText();
     }
 
     // Initialize the view model to set the recipe and the current step.
@@ -68,10 +67,19 @@ public class StepDetailActivity extends AppCompatActivity {
         mRecipeViewModel.setSelectedRecipe(recipeId);
         mRecipeViewModel.setSelectedRecipeStep(stepId);
 
+        setTitleText();
+    }
+
+    private void setTitleText() {
         mRecipeViewModel.getSelectedRecipe().observe(this, recipe -> {
             if (recipe != null) {
                 setTitle(recipe.getName() + " Recipe");
             }
         });
+    }
+
+    private void initIngredientViewModel(int recipeId) {
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.setSelectedRecipeStep(recipeId);
     }
 }
