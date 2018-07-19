@@ -1,9 +1,7 @@
 package com.nverno.bakingtime.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,9 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.adapter.RecipeCardAdapter;
 import com.nverno.bakingtime.model.Recipe;
+import com.nverno.bakingtime.util.WidgetHelper;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
-
-import java.util.List;
+import com.nverno.bakingtime.widget.WidgetUpdateService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,7 +65,14 @@ public class MainActivity extends AppCompatActivity
     public void onCardClick(Recipe recipe) {
         final Intent intent = new Intent(this, RecipeDetailActivity.class);
 
+        // Set a singleton for our selected recipe widget.
+        if (WidgetHelper.getInstance().getCurrentRecipe() != recipe) {
+            WidgetHelper.getInstance().setCurrentRecipe(recipe);
+            WidgetUpdateService.updateWidget(this);
+        }
+
         intent.putExtra(RECIPE_ID, recipe.getId());
+
         startActivity(intent);
     }
 }
