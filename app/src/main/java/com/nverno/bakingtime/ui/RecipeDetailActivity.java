@@ -117,9 +117,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
         // Set our initial state here so we don't repeat our initial setup on resuming the activity.
         savedInstanceState.putBoolean(INITIAL_STATE, true);
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     public void ingredientsView() {

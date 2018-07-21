@@ -1,5 +1,6 @@
 package com.nverno.bakingtime.ui;
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
@@ -34,6 +35,12 @@ public class StepMediaFragment extends Fragment {
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mViewVideoPlayer;
     private TextView mTxtNoMedia;
+
+    private static String EXO_CURRENT_POS = "EXO_CURRENT_POS";
+    private static String EXO_PLAY_WHEN_READY = "EXO_PLAY_WHEN_READY";
+
+    private Long mExoPlayerCurrentPosition;
+    private Boolean mExoPlayerPlayWhenReady;
 
     @Override
     public void onAttach(Context context) {
@@ -106,7 +113,7 @@ public class StepMediaFragment extends Fragment {
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
 
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(),
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(),
                     trackSelector,
                     loadControl);
 
@@ -121,20 +128,67 @@ public class StepMediaFragment extends Fragment {
                     new DefaultExtractorsFactory(), null, null);
 
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+
+            if (mExoPlayerCurrentPosition != null) {
+                mExoPlayer.seekTo(mExoPlayerCurrentPosition);
+            }
+
+            if (mExoPlayerPlayWhenReady != null) {
+                mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
+            }
+
+//            mInstanceStateViewModel.getmExoPlayerCurrentPosition().observe(this, currentPosition -> {
+//                if (currentPosition != null) {
+//                    mExoPlayer.seekTo(currentPosition);
+//                }
+//            });
+
+//            mInstanceStateViewModel.getmExoPlayerPlayWhenReady().observe(this, playWhenReady -> {
+//                if (playWhenReady != null) {
+//                    mExoPlayer.setPlayWhenReady(playWhenReady);
+//                } else {
+//                    mExoPlayer.setPlayWhenReady(false);
+//                }
+//            });
+
         }
     }
 
+    public void onResume() {
+        super.onResume();
+
+    }
+
     private void releasePlayer() {
+
+//        mInstanceStateViewModel.setExoPlayerCurrentPosition(mExoPlayer.getCurrentPosition());
+//        mInstanceStateViewModel.setmExoPlayerPlayWhenReady(mExoPlayer.getPlayWhenReady());
+
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mExoPlayer != null) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
+        savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23 && mExoPlayer != null) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23 && mExoPlayer != null) {
             releasePlayer();
         }
     }
