@@ -42,6 +42,8 @@ public class StepMediaFragment extends Fragment {
     private Long mExoPlayerCurrentPosition;
     private Boolean mExoPlayerPlayWhenReady;
 
+    RecipeViewModel recipeViewModel;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -70,13 +72,19 @@ public class StepMediaFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        recipeViewModel
+                = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+        if (savedInstanceState != null) {
+            mExoPlayerCurrentPosition = savedInstanceState.getLong(EXO_CURRENT_POS);
+            mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXO_PLAY_WHEN_READY);
+//            recipeViewModel.setSelectedRecipe(savedInstanceState.getInt("RECIPE"));
+//            recipeViewModel.setSelectedRecipeStep(savedInstanceState.getInt("STEP"));
+        }
 
         initViewModel();
     }
 
     private void initViewModel() {
-        RecipeViewModel recipeViewModel
-                = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
 
         recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
@@ -136,34 +144,16 @@ public class StepMediaFragment extends Fragment {
             if (mExoPlayerPlayWhenReady != null) {
                 mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
             }
-
-//            mInstanceStateViewModel.getmExoPlayerCurrentPosition().observe(this, currentPosition -> {
-//                if (currentPosition != null) {
-//                    mExoPlayer.seekTo(currentPosition);
-//                }
-//            });
-
-//            mInstanceStateViewModel.getmExoPlayerPlayWhenReady().observe(this, playWhenReady -> {
-//                if (playWhenReady != null) {
-//                    mExoPlayer.setPlayWhenReady(playWhenReady);
-//                } else {
-//                    mExoPlayer.setPlayWhenReady(false);
-//                }
-//            });
-
         }
     }
 
     public void onResume() {
         super.onResume();
 
+        initViewModel();
     }
 
     private void releasePlayer() {
-
-//        mInstanceStateViewModel.setExoPlayerCurrentPosition(mExoPlayer.getCurrentPosition());
-//        mInstanceStateViewModel.setmExoPlayerPlayWhenReady(mExoPlayer.getPlayWhenReady());
-
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
@@ -173,8 +163,16 @@ public class StepMediaFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
-        savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+        if (mExoPlayer != null) {
+            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
+            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+//            if (recipeViewModel.getSelectedRecipe().getValue() != null) {
+//                savedInstanceState.putInt("RECIPE", recipeViewModel.getSelectedRecipe().getValue().getId());
+//            }
+//            if (recipeViewModel.getSelectedRecipeStep().getValue() != null) {
+//                savedInstanceState.putInt("STEP", recipeViewModel.getSelectedRecipeStep().getValue().getStepNumber());
+//            }
+        }
     }
 
     @Override
