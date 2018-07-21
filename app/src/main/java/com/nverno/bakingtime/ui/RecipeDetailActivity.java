@@ -41,7 +41,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
         descriptionFragment = fm.findFragmentById(R.id.fragment_step_detail);
         mDivider = findViewById(R.id.divider_horizontal_constraint);
 
-        if (findViewById(R.id.divider_vertical_constraint) != null) {
+        if (findViewById(R.id.is_sw600dp) != null) {
             mLargeLayout = true;
         }
 

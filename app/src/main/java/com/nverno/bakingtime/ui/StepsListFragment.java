@@ -68,7 +68,7 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (mFragmentActivity.findViewById(R.id.divider_vertical_constraint) != null) {
+        if (mFragmentActivity.findViewById(R.id.is_sw600dp) != null) {
             mLargeLayout = true;
         }
 
