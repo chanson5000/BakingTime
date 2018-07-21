@@ -38,7 +38,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
 
         ingredientListFragment = fm.findFragmentById(R.id.fragment_ingredients_list);
         mediaFragment = fm.findFragmentById(R.id.fragment_step_media);
-        descriptionFragment = fm.findFragmentById(R.id.fragment_step_detail);
+        descriptionFragment = fm.findFragmentById(R.id.fragment_step_description);
         mDivider = findViewById(R.id.divider_horizontal_constraint);
 
         if (findViewById(R.id.is_sw600dp) != null) {

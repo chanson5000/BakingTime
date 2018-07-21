@@ -39,7 +39,7 @@ public class StepDescriptionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_step_detail,
+        final View rootView = inflater.inflate(R.layout.fragment_step_description,
                 container, false);
 
         mTextRecipeStepInstruction = rootView.findViewById(R.id.recipe_step_instructions);

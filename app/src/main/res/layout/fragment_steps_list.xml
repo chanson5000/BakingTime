@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/recipe_steps_ingredients"
+        android:id="@+id/static_text_recipe_steps_ingredients"
         style="@style/TextList"
         android:text="@string/ingredients" />
 

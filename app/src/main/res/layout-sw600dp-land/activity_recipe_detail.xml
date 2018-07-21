@@ -51,13 +51,13 @@
             android:id="@+id/divider_horizontal_constraint"
             style="@style/Divider.HorizontalConstraint"
             android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toTopOf="@id/fragment_step_detail"
+            app:layout_constraintBottom_toTopOf="@id/fragment_step_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_step_media" />
 
         <fragment
-            android:id="@+id/fragment_step_detail"
+            android:id="@+id/fragment_step_description"
             android:name="com.nverno.bakingtime.ui.StepDescriptionFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -65,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_horizontal_constraint"
-            tools:layout="@layout/fragment_step_detail" />
+            tools:layout="@layout/fragment_step_description" />
 
         <fragment
             android:id="@+id/fragment_ingredients_list"

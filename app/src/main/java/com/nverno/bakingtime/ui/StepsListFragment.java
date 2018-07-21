@@ -53,7 +53,7 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
         final View rootView
                 = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
-        TextView mTextIngredients = rootView.findViewById(R.id.recipe_steps_ingredients);
+        TextView mTextIngredients = rootView.findViewById(R.id.static_text_recipe_steps_ingredients);
         mTextIngredients.setOnClickListener(v -> onIngredientClick());
         RecyclerView recyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));

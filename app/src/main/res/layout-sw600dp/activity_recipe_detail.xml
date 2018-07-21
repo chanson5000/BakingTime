@@ -63,11 +63,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <fragment
-                android:id="@+id/fragment_step_detail"
+                android:id="@+id/fragment_step_description"
                 android:name="com.nverno.bakingtime.ui.StepDescriptionFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/fragment_step_detail" />
+                tools:layout="@layout/fragment_step_description" />
 
             <fragment
                 android:id="@+id/fragment_ingredients_list"
