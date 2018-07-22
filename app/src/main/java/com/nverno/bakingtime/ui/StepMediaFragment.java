@@ -1,6 +1,5 @@
 package com.nverno.bakingtime.ui;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
@@ -78,15 +77,12 @@ public class StepMediaFragment extends Fragment {
         if (savedInstanceState != null) {
             mExoPlayerCurrentPosition = savedInstanceState.getLong(EXO_CURRENT_POS);
             mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXO_PLAY_WHEN_READY);
-//            recipeViewModel.setSelectedRecipe(savedInstanceState.getInt("RECIPE"));
-//            recipeViewModel.setSelectedRecipeStep(savedInstanceState.getInt("STEP"));
         }
 
         initViewModel();
     }
 
     private void initViewModel() {
-
         recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
                 if (mExoPlayer != null) {
@@ -148,10 +144,20 @@ public class StepMediaFragment extends Fragment {
         }
     }
 
+
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initViewModel();
+
+        }
+    }
+
     public void onResume() {
         super.onResume();
-
-        initViewModel();
+        if (Util.SDK_INT <= 23 || mExoPlayer == null) {
+            initViewModel();
+        }
     }
 
     private void releasePlayer() {
@@ -169,12 +175,6 @@ public class StepMediaFragment extends Fragment {
         if (mExoPlayer != null) {
             savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
             savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
-//            if (recipeViewModel.getSelectedRecipe().getValue() != null) {
-//                savedInstanceState.putInt("RECIPE", recipeViewModel.getSelectedRecipe().getValue().getId());
-//            }
-//            if (recipeViewModel.getSelectedRecipeStep().getValue() != null) {
-//                savedInstanceState.putInt("STEP", recipeViewModel.getSelectedRecipeStep().getValue().getStepNumber());
-//            }
         }
     }
 
