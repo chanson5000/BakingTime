@@ -74,6 +74,7 @@ public class StepMediaFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         recipeViewModel
                 = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+
         if (savedInstanceState != null) {
             mExoPlayerCurrentPosition = savedInstanceState.getLong(EXO_CURRENT_POS);
             mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXO_PLAY_WHEN_READY);
@@ -154,6 +155,8 @@ public class StepMediaFragment extends Fragment {
     }
 
     private void releasePlayer() {
+        mExoPlayerCurrentPosition = mExoPlayer.getCurrentPosition();
+        mExoPlayerPlayWhenReady = mExoPlayer.getPlayWhenReady();
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
