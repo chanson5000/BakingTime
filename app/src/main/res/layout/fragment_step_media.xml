@@ -9,7 +9,7 @@
         android:id="@+id/recipe_no_media"
         style="@style/NoMediaAvailable" />
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/recipe_step_media"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
