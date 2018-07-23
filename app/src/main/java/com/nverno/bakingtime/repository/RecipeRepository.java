@@ -48,18 +48,6 @@ public class RecipeRepository {
         return mRecipeDatabase.recipeDao().getAll();
     }
 
-    public LiveData<List<Ingredient>> getIngredientsForRecipe(int recipeId) {
-        return mRecipeDatabase.ingredientDao().getIngredientsForRecipe(recipeId);
-    }
-
-    public LiveData<List<Ingredient>> getAllIngredients() {
-        return mRecipeDatabase.ingredientDao().getAll();
-    }
-
-    public LiveData<List<Step>> getStepsForRecipe(int recipeId) {
-        return mRecipeDatabase.stepDao().getStepsForRecipe(recipeId);
-    }
-
     private void loadData() {
 
         // Check to see if database has already been updated.
@@ -96,36 +84,35 @@ public class RecipeRepository {
                         final List<Recipe> recipes = response.body();
 
                         if (recipes != null && !recipes.isEmpty()) {
-                            final List<Recipe> modRecipes = fixMissingData(recipes);
-                            Log.d(LOG_TAG, "Successfully fetched data.");
 
-                            // Updating the recipe database with our internet data in new thread.
-                            AppExecutors.getInstance().diskIO().execute(() -> {
-                                // Using "fixMissingData" for injecting images that weren't included.
-                                mRecipeDatabase.recipeDao().insertMany(fixMissingData(modRecipes));
-                            });
+                            Log.d(LOG_TAG, "Successfully internet fetched data.");
 
-                            // Iterating through the recipe object to insert ingredients and
-                            // steps data into the database.
+                            // Part 1 of cleaning up data.
                             for (Recipe recipe : recipes) {
-
                                 final List<Ingredient> ingredients = recipe.getIngredients();
-
+                                // Makes sure the recipe steps are in order when steps are set.
                                 final List<Step> steps = fixStepIndexes(recipe.getSteps());
 
                                 for (Ingredient ingredient : ingredients) {
                                     ingredient.setRecipeId(recipe.getId());
                                 }
-
                                 for (Step step : steps) {
                                     step.setRecipeId(recipe.getId());
                                 }
 
-                                AppExecutors.getInstance().diskIO().execute(() -> {
-                                    mRecipeDatabase.ingredientDao().insertMany(ingredients);
-                                    mRecipeDatabase.stepDao().insertMany(steps);
-                                });
+                                // Setting correct data with references and fixed step order.
+                                recipe.setIngredients(ingredients);
+                                recipe.setSteps(steps);
                             }
+
+                            // Updating the recipe database with our internet data in new thread.
+                            AppExecutors.getInstance().diskIO().execute(() -> {
+                                // Using "fixMissingData" for injecting images that weren't included.
+                                mRecipeDatabase.recipeDao().insertMany(fixMissingData(recipes));
+                            });
+
+                            Log.d(LOG_TAG, "Database updated.");
+                            // Flag our database is updated so it wont be again during this session.
                             sDatabaseUpdated = true;
                         } else {
                             Log.d(LOG_TAG, "Failed to fetch internet data: empty response.");
@@ -154,6 +141,7 @@ public class RecipeRepository {
             InputStream is = mContext.getAssets().open("baking.json");
             int size = is.available();
             byte[] buffer = new byte[size];
+            //noinspection ResultOfMethodCallIgnored
             is.read(buffer);
             is.close();
             localRecipeData = new String(buffer, "UTF-8");
