@@ -1,6 +1,5 @@
 package com.nverno.bakingtime.ui;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
@@ -18,14 +17,12 @@ import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.nverno.bakingtime.R;
@@ -39,13 +36,11 @@ public class StepMediaFragment extends Fragment {
     private PlayerView mViewVideoPlayer;
     private TextView mTxtNoMedia;
 
-    private static String EXO_CURRENT_POS = "EXO_CURRENT_POS";
-    private static String EXO_PLAY_WHEN_READY = "EXO_PLAY_WHEN_READY";
+    private static final String EXO_CURRENT_POS = "EXO_CURRENT_POS";
+    private static final String EXO_PLAY_WHEN_READY = "EXO_PLAY_WHEN_READY";
 
     private Long mExoPlayerCurrentPosition;
     private Boolean mExoPlayerPlayWhenReady;
-
-    RecipeViewModel recipeViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -85,8 +80,7 @@ public class StepMediaFragment extends Fragment {
     }
 
     private void initViewModel() {
-        recipeViewModel
-                = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
 
         recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {

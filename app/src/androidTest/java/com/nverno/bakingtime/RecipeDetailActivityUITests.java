@@ -18,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 public class RecipeDetailActivityUITests {
 
     @Rule
-    public ActivityTestRule<RecipeDetailActivity> recipeDetailActivityRule
+    public final ActivityTestRule<RecipeDetailActivity> recipeDetailActivityRule
             = new ActivityTestRule<>(RecipeDetailActivity.class);
 
     @Test

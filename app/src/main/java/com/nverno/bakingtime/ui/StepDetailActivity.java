@@ -3,14 +3,10 @@ package com.nverno.bakingtime.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nverno.bakingtime.R;
-import com.nverno.bakingtime.util.FragmentViewChanger;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class StepDetailActivity extends AppCompatActivity {
@@ -76,10 +72,5 @@ public class StepDetailActivity extends AppCompatActivity {
                 setTitle(recipe.getName() + " Recipe");
             }
         });
-    }
-
-    private void initIngredientViewModel(int recipeId) {
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.setSelectedRecipeStep(recipeId);
     }
 }

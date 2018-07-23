@@ -8,7 +8,7 @@ import android.content.Intent;
 
 public class WidgetUpdateService extends IntentService {
 
-    public static final String ACTION_UPDATE_RECIPE_WIDGETS
+    private static final String ACTION_UPDATE_RECIPE_WIDGETS
             = "com.nverno.bakingtime.action.update_recipe_widgets";
 
     public WidgetUpdateService() {

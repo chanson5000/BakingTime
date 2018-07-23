@@ -22,7 +22,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
     private static final String RECIPE_ID = "RECIPE_ID";
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(),
                 R.layout.recipe_ingredients_widget);

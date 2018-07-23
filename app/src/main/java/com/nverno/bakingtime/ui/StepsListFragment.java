@@ -86,7 +86,7 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     }
 
     // Separate actions for these depending on the layout size.
-    public void onIngredientClick() {
+    private void onIngredientClick() {
         if (!mLargeLayout) {
             Intent intent = new Intent(getContext(), IngredientListActivity.class);
 
