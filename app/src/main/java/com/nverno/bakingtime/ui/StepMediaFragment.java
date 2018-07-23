@@ -22,7 +22,6 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.nverno.bakingtime.R;
@@ -148,14 +147,17 @@ public class StepMediaFragment extends Fragment {
         }
     }
 
-    private void hideSystemUi() {
-        mViewVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
+    // This code was suggested to hide UI elements but I do not want to use it quite yet
+    // as this causes issues with my current solution for hiding the action bar on rotate.
+    // Leaving commented here for future consideration.
+//    private void hideSystemUi() {
+//        mViewVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//    }
 
     public void onStart() {
         super.onStart();
@@ -167,7 +169,8 @@ public class StepMediaFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (Util.SDK_INT <= 23 || mExoPlayer == null) {
-            hideSystemUi();
+            // No use for this quite yet, bookmarking future consideration.
+//            hideSystemUi();
             initViewModel();
         }
     }
