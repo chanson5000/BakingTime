@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
+@SuppressWarnings("unused")
 @Entity(foreignKeys = @ForeignKey(
         entity = Recipe.class,
         parentColumns = "id",
