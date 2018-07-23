@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity
 
     private RecipeCardAdapter mRecipeCardAdapter;
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recipe_card_recycler_view)
     RecyclerView mRecyclerView;
 
