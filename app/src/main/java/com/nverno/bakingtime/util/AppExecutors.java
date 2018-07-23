@@ -58,10 +58,12 @@ public class AppExecutors {
         return diskIO;
     }
 
+    @SuppressWarnings("unused")
     public Executor mainThread() {
         return mainThread;
     }
 
+    @SuppressWarnings("unused")
     public Executor networkIO() {
         return networkIO;
     }
