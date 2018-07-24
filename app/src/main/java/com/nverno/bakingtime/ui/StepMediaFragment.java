@@ -180,13 +180,16 @@ public class StepMediaFragment extends Fragment {
             savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
             // If was was doing it the other way I believe could have just removed the ExoPlayer null
             // check and set the saved instance state with the member variables if they had values.
+            // Using this as a backup now in case the ExoPlayer is null but we still have valid
+            // member variables.
         } else if (mExoPlayerCurrentPosition != null && mExoPlayerPlayWhenReady != null) {
             savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayerCurrentPosition);
             savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
         }
     }
 
-    // In API 24+ onPause is called after saved instance state.
+    // In earlier APIs onPause is called after onSavedInstanceState. Later APIs there is no
+    // guarantee if it is called before or after onPause.
     public void onPause() {
         super.onPause();
         if (Util.SDK_INT <= 23 && mExoPlayer != null) {
@@ -195,8 +198,9 @@ public class StepMediaFragment extends Fragment {
         }
     }
 
-    // So hold off until onStop to save the state and release the player as to not interfere
-    // with the savedInstanceState operations.
+    // In API 24+ onStop is called after saved instance state.
+    // So hold off onStop until later on higher API levels when saving state to release the player
+    // as late as possible while not interfering with the savedInstanceState operations.
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23 && mExoPlayer != null) {
