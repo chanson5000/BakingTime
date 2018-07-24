@@ -16,7 +16,8 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 public class RecipeDetailActivity extends AppCompatActivity implements FragmentViewChanger {
 
     private static final String RECIPE_ID = "RECIPE_ID";
-    private static final String INITIAL_STATE = "INITIAL_STATE";
+    private static final String STEP_ID = "STEP_ID";
+    private static final String INGREDIENTS_SELECTED = "INGREDIENTS_SELECTED";
 
     private RecipeViewModel mRecipeViewModel;
     private FragmentManager fm;
@@ -27,12 +28,14 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
 
     private boolean mLargeLayout;
     private View mDivider;
+    private Boolean mIngredientsSelected;
     private static boolean sDividerIsHidden;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         fm = getSupportFragmentManager();
 
@@ -45,17 +48,43 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
             mLargeLayout = true;
         }
 
-        Intent parentIntent = getIntent();
+        if (savedInstanceState != null) {
+            if (mRecipeViewModel.getSelectedRecipe().getValue() != null) {
 
-        if (parentIntent != null && parentIntent.hasExtra(RECIPE_ID)) {
-            Bundle bundle = parentIntent.getExtras();
-            if (bundle != null) {
-                boolean initialState = false;
-                // Check to see if we have set our initial state.
-                if (savedInstanceState != null) {
-                    initialState = savedInstanceState.getBoolean(INITIAL_STATE);
+                if (mRecipeViewModel.getSelectedRecipeStep().getValue() == null && mLargeLayout) {
+                    initialIngredientsListState();
                 }
-                initViewModel(bundle.getInt(RECIPE_ID), initialState);
+
+            } else {
+                if (mLargeLayout) {
+                    setViewModel(savedInstanceState.getInt(RECIPE_ID),
+                            savedInstanceState.getInt(STEP_ID));
+                    if (savedInstanceState.getBoolean(INGREDIENTS_SELECTED)) {
+                        ingredientsView();
+                    } else {
+                        detailsView();
+                    }
+                } else {
+                    setViewModel(savedInstanceState.getInt(RECIPE_ID));
+                }
+            }
+            setActionBarText();
+            if (mLargeLayout) {
+                syncDividerState();
+            }
+        } else {
+            Intent parentIntent = getIntent();
+
+            if (parentIntent != null && parentIntent.hasExtra(RECIPE_ID)) {
+
+                Bundle bundle = parentIntent.getExtras();
+                if (bundle != null) {
+                    setViewModel(bundle.getInt(RECIPE_ID));
+                    setActionBarText();
+                    if (mLargeLayout) {
+                        initialIngredientsListState();
+                    }
+                }
             }
         }
     }
@@ -82,32 +111,28 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
         }
     }
 
-    private void initViewModel(int recipeId, boolean initialState) {
-        setupViewModel();
+    private void initialIngredientsListState() {
+        // On the first initialization of our activity we will set the selected step to the
+        // introduction and hide the ingredients list fragment.
+        mRecipeViewModel.setSelectedRecipeStep(0);
 
-        mRecipeViewModel.setSelectedRecipe(recipeId);
-
-        // The large layout requires attention as it contains multiple fragments.
-        if (mLargeLayout) {
-            // On the first initialization of our activity we will set the selected step to the
-            // introduction and hide the ingredients list fragment.
-            if (!initialState) {
-                mRecipeViewModel.setSelectedRecipeStep(0);
-
-                FragmentTransaction ft = fm.beginTransaction();
-                if (!ingredientListFragment.isHidden()) {
-                    ft.hide(ingredientListFragment);
-                }
-                ft.commit();
-            }
-            // Always make sure the divider is properly displayed.
-            syncDividerState();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (!ingredientListFragment.isHidden()) {
+            ft.hide(ingredientListFragment);
         }
-
+        ft.commit();
     }
 
-    private void setupViewModel() {
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+    private void setViewModel(int recipeId) {
+        mRecipeViewModel.setSelectedRecipe(recipeId);
+    }
+
+    private void setViewModel(int recipeId, int stepId) {
+        mRecipeViewModel.setSelectedRecipe(recipeId);
+        mRecipeViewModel.setSelectedRecipeStep(stepId);
+    }
+
+    private void setActionBarText() {
         mRecipeViewModel.getSelectedRecipe().observe(this, recipe -> {
             if (recipe != null) {
                 setTitle(recipe.getName() + " Recipe");
@@ -117,10 +142,19 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Set our initial state here so we don't repeat our initial setup on resuming the activity.
-        savedInstanceState.putBoolean(INITIAL_STATE, true);
-
         super.onSaveInstanceState(savedInstanceState);
+        if (mRecipeViewModel.getSelectedRecipe().getValue() != null) {
+            savedInstanceState.putInt(RECIPE_ID,
+                    mRecipeViewModel.getSelectedRecipe().getValue().getId());
+        }
+        if (mRecipeViewModel.getSelectedRecipeStep().getValue() != null) {
+            savedInstanceState.putInt(STEP_ID,
+                    mRecipeViewModel.getSelectedRecipeStep().getValue().getStepNumber());
+        }
+        if (mIngredientsSelected != null) {
+            savedInstanceState.putBoolean(INGREDIENTS_SELECTED,
+                    mIngredientsSelected);
+        }
     }
 
     public void ingredientsView() {
@@ -135,6 +169,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
         if (!descriptionFragment.isHidden()) {
             ft.hide(descriptionFragment);
         }
+        mIngredientsSelected = true;
         hideDivider();
         ft.commit();
     }
@@ -151,6 +186,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements FragmentV
         if (descriptionFragment.isHidden()) {
             ft.show(descriptionFragment);
         }
+        mIngredientsSelected = false;
         showDivider();
         ft.commit();
     }

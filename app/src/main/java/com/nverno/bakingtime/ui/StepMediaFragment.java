@@ -15,12 +15,10 @@ import android.widget.TextView;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -41,22 +39,23 @@ public class StepMediaFragment extends Fragment {
     private Long mExoPlayerCurrentPosition;
     private Boolean mExoPlayerPlayWhenReady;
 
+    private RecipeViewModel recipeViewModel;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         mFragmentActivity = getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView = inflater.inflate(R.layout.fragment_step_media,
                 container, false);
 
@@ -69,18 +68,13 @@ public class StepMediaFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState != null) {
             mExoPlayerCurrentPosition = savedInstanceState.getLong(EXO_CURRENT_POS);
             mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXO_PLAY_WHEN_READY);
         }
-
-        initViewModel();
     }
 
-    private void initViewModel() {
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
-
+    private void setupPlayer() {
         recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
                 if (mExoPlayer != null) {
@@ -89,11 +83,16 @@ public class StepMediaFragment extends Fragment {
                 if (!step.getVideoURL().isEmpty()) {
                     playerVisible();
                     initializePlayer(Uri.parse(step.getVideoURL()));
+                    loadPlayerState();
+                    resetPlayerState();
                 } else if (!step.getThumbnailURL().isEmpty()) {
                     playerVisible();
                     initializePlayer(Uri.parse(step.getThumbnailURL()));
+                    loadPlayerState();
+                    resetPlayerState();
                 } else {
                     noMedia();
+                    resetPlayerState();
                 }
             }
         });
@@ -109,100 +108,88 @@ public class StepMediaFragment extends Fragment {
         mTxtNoMedia.setVisibility(View.VISIBLE);
     }
 
-    private void initializePlayer(Uri mediaUri) {
-        if (mExoPlayer == null) {
-
-            // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                    new DefaultRenderersFactory(mFragmentActivity),
-                    trackSelector,
-                    loadControl);
-
-            mViewVideoPlayer.setPlayer(mExoPlayer);
-
-            // Prepare the media resource.
-//            String userAgent
-//                    = Util.getUserAgent(mFragmentActivity, "RecipeStepMedia");
-
-//            MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
-//                    new DefaultDataSourceFactory(mFragmentActivity, userAgent),
-//                    new DefaultExtractorsFactory(), null, null);
-
-            MediaSource mediaSource = new ExtractorMediaSource.Factory(
-                    new DefaultHttpDataSourceFactory("RecipeStepMedia"))
-                    .createMediaSource(mediaUri);
-
-            mExoPlayer.prepare(mediaSource, true, false);
-
-            if (mExoPlayerCurrentPosition != null) {
-                mExoPlayer.seekTo(mExoPlayerCurrentPosition);
-            }
-
-            if (mExoPlayerPlayWhenReady != null) {
-                mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
-            }
-        }
+    private SimpleExoPlayer createExoPlayerInstance(FragmentActivity fragmentActivity) {
+        return ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(fragmentActivity),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
     }
 
-    // This code was suggested to hide UI elements but I do not want to use it quite yet
-    // as this causes issues with my current solution for hiding the action bar on rotate.
-    // Leaving commented here for future consideration.
-//    private void hideSystemUi() {
-//        mViewVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-//    }
+    private MediaSource createMediaSourceFromUri(Uri mediaUri) {
+        return new ExtractorMediaSource.Factory(
+                new DefaultHttpDataSourceFactory("exoplayer-recipe-step-media"))
+                .createMediaSource(mediaUri);
+    }
+
+    private void initializePlayer(Uri mediaUri) {
+        if (mExoPlayer == null) {
+            mExoPlayer = createExoPlayerInstance(mFragmentActivity);
+            mViewVideoPlayer.setPlayer(mExoPlayer);
+            mExoPlayer.prepare(createMediaSourceFromUri(mediaUri), true, false);
+        }
+    }
 
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23) {
-            initViewModel();
+            setupPlayer();
         }
     }
 
     public void onResume() {
         super.onResume();
-        if (Util.SDK_INT <= 23 || mExoPlayer == null) {
-            // No use for this quite yet, bookmarking future consideration.
-//            hideSystemUi();
-            initViewModel();
+        if (Util.SDK_INT <= 23) {
+            setupPlayer();
         }
     }
 
+    private void savePlayerState() {
+        if (mExoPlayer != null) {
+            mExoPlayerCurrentPosition = mExoPlayer.getCurrentPosition();
+            mExoPlayerPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
+    }
+
+    private void loadPlayerState() {
+        if (mExoPlayerCurrentPosition != null && mExoPlayerPlayWhenReady != null) {
+            mExoPlayer.seekTo(mExoPlayerCurrentPosition);
+            mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
+        }
+    }
+
+    private void resetPlayerState() {
+        mExoPlayerCurrentPosition = null;
+        mExoPlayerPlayWhenReady = null;
+    }
+
     private void releasePlayer() {
-        mExoPlayerCurrentPosition = mExoPlayer.getCurrentPosition();
-        mExoPlayerPlayWhenReady = mExoPlayer.getPlayWhenReady();
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        if (mExoPlayer != null) {
-            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
-            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
-        }
-    }
-
+    // onPause, onSaveInstanceState, and onStop in their order of execution.
     public void onPause() {
         super.onPause();
         if (Util.SDK_INT <= 23 && mExoPlayer != null) {
+            savePlayerState();
             releasePlayer();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if (mExoPlayerCurrentPosition != null & mExoPlayerPlayWhenReady != null) {
+            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayerCurrentPosition);
+            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
         }
     }
 
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23 && mExoPlayer != null) {
+            savePlayerState();
             releasePlayer();
         }
     }

@@ -33,6 +33,7 @@ public class StepDescriptionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRecipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
     }
 
     @Override
@@ -59,7 +60,6 @@ public class StepDescriptionFragment extends Fragment {
     }
 
     private void initViewModel() {
-        mRecipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
 
         mRecipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
