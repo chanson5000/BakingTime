@@ -168,18 +168,42 @@ public class StepMediaFragment extends Fragment {
         mExoPlayer = null;
     }
 
+    // For the savedInstanceState...
+    // I want to be able to pull current ExoPlayer values before onPause or onStop is called.
+    // We are now pulling the state from the actual ExoPlayer rather than the member variables.
+    // Before, the member variables weren't being pulled because the ExoPlayer state was null.
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         if (mExoPlayer != null) {
             savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
             savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+            // If was was doing it the other way I believe could have just removed the ExoPlayer null
+            // check and set the saved instance state with the member variables if they had values.
+            // Using this as a backup now in case the ExoPlayer is null but we still have valid
+            // member variables.
+        } else if (mExoPlayerCurrentPosition != null && mExoPlayerPlayWhenReady != null) {
+            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayerCurrentPosition);
+            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
         }
     }
 
+    // In earlier APIs onPause is called after onSavedInstanceState. Later APIs there is no
+    // guarantee if it is called before or after onPause.
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23 && mExoPlayer != null) {
+            savePlayerState();
+            releasePlayer();
+        }
+    }
+
+    // In API 24+ onStop is called after saved instance state.
+    // So hold off onStop until later on higher API levels when saving state to release the player
+    // as late as possible while not interfering with the savedInstanceState operations.
     public void onStop() {
         super.onStop();
-        if (mExoPlayer != null) {
+        if (Util.SDK_INT > 23 && mExoPlayer != null) {
             savePlayerState();
             releasePlayer();
         }
