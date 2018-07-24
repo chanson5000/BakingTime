@@ -13,16 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.nverno.bakingtime.R;
 import com.nverno.bakingtime.viewmodel.RecipeViewModel;
@@ -32,25 +30,32 @@ public class StepMediaFragment extends Fragment {
     private FragmentActivity mFragmentActivity;
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mViewVideoPlayer;
+    private PlayerView mViewVideoPlayer;
     private TextView mTxtNoMedia;
+
+    private static final String EXO_CURRENT_POS = "EXO_CURRENT_POS";
+    private static final String EXO_PLAY_WHEN_READY = "EXO_PLAY_WHEN_READY";
+
+    private Long mExoPlayerCurrentPosition;
+    private Boolean mExoPlayerPlayWhenReady;
+
+    private RecipeViewModel recipeViewModel;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         mFragmentActivity = getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView = inflater.inflate(R.layout.fragment_step_media,
                 container, false);
 
@@ -63,14 +68,13 @@ public class StepMediaFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        initViewModel();
+        if (savedInstanceState != null) {
+            mExoPlayerCurrentPosition = savedInstanceState.getLong(EXO_CURRENT_POS);
+            mExoPlayerPlayWhenReady = savedInstanceState.getBoolean(EXO_PLAY_WHEN_READY);
+        }
     }
 
-    private void initViewModel() {
-        RecipeViewModel recipeViewModel
-                = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
-
+    private void setupPlayer() {
         recipeViewModel.getSelectedRecipeStep().observe(this, step -> {
             if (step != null) {
                 if (mExoPlayer != null) {
@@ -79,11 +83,16 @@ public class StepMediaFragment extends Fragment {
                 if (!step.getVideoURL().isEmpty()) {
                     playerVisible();
                     initializePlayer(Uri.parse(step.getVideoURL()));
+                    loadPlayerState();
+                    resetPlayerState();
                 } else if (!step.getThumbnailURL().isEmpty()) {
                     playerVisible();
                     initializePlayer(Uri.parse(step.getThumbnailURL()));
+                    loadPlayerState();
+                    resetPlayerState();
                 } else {
                     noMedia();
+                    resetPlayerState();
                 }
             }
         });
@@ -99,30 +108,58 @@ public class StepMediaFragment extends Fragment {
         mTxtNoMedia.setVisibility(View.VISIBLE);
     }
 
+    private SimpleExoPlayer createExoPlayerInstance(FragmentActivity fragmentActivity) {
+        return ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(fragmentActivity),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
+    }
+
+    private MediaSource createMediaSourceFromUri(Uri mediaUri) {
+        return new ExtractorMediaSource.Factory(
+                new DefaultHttpDataSourceFactory("exoplayer-recipe-step-media"))
+                .createMediaSource(mediaUri);
+    }
+
     private void initializePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
-
-            // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(),
-                    trackSelector,
-                    loadControl);
-
+            mExoPlayer = createExoPlayerInstance(mFragmentActivity);
             mViewVideoPlayer.setPlayer(mExoPlayer);
-
-            // Prepare the media resource.
-            String userAgent
-                    = Util.getUserAgent(mFragmentActivity, "RecipeStepMedia");
-
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
-                    new DefaultDataSourceFactory(mFragmentActivity, userAgent),
-                    new DefaultExtractorsFactory(), null, null);
-
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.prepare(createMediaSourceFromUri(mediaUri), true, false);
         }
+    }
+
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            setupPlayer();
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= 23) {
+            setupPlayer();
+        }
+    }
+
+    private void savePlayerState() {
+        if (mExoPlayer != null) {
+            mExoPlayerCurrentPosition = mExoPlayer.getCurrentPosition();
+            mExoPlayerPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
+    }
+
+    private void loadPlayerState() {
+        if (mExoPlayerCurrentPosition != null && mExoPlayerPlayWhenReady != null) {
+            mExoPlayer.seekTo(mExoPlayerCurrentPosition);
+            mExoPlayer.setPlayWhenReady(mExoPlayerPlayWhenReady);
+        }
+    }
+
+    private void resetPlayerState() {
+        mExoPlayerCurrentPosition = null;
+        mExoPlayerPlayWhenReady = null;
     }
 
     private void releasePlayer() {
@@ -131,10 +168,28 @@ public class StepMediaFragment extends Fragment {
         mExoPlayer = null;
     }
 
+    // onPause, onSaveInstanceState, and onStop in their order of execution.
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23 && mExoPlayer != null) {
+            savePlayerState();
+            releasePlayer();
+        }
+    }
+
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mExoPlayer != null) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if (mExoPlayerCurrentPosition != null & mExoPlayerPlayWhenReady != null) {
+            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayerCurrentPosition);
+            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
+        }
+    }
+
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23 && mExoPlayer != null) {
+            savePlayerState();
             releasePlayer();
         }
     }

@@ -16,22 +16,23 @@ import java.util.List;
 
 public class RecipeViewModel extends AndroidViewModel {
 
+    @SuppressWarnings("CanBeFinal")
     private RecipeRepository recipeRepository;
 
-    private MutableLiveData<Integer> selectedRecipeId = new MutableLiveData<>();
-    private MutableLiveData<Integer> selectedStepId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedRecipeId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedStepId = new MutableLiveData<>();
 
-    private LiveData<Recipe> selectedRecipe =
+    private final LiveData<Recipe> selectedRecipe =
             Transformations.switchMap(selectedRecipeId,
                     recipeId -> recipeRepository.getRecipeById(recipeId));
 
-    private LiveData<List<Step>> selectedRecipeSteps
+    private final LiveData<List<Step>> selectedRecipeSteps
             = Transformations.map(selectedRecipe, Recipe::getSteps);
 
-    private LiveData<List<Ingredient>> selectedRecipeIngredients =
+    private final LiveData<List<Ingredient>> selectedRecipeIngredients =
             Transformations.map(selectedRecipe, Recipe::getIngredients);
 
-    private LiveData<Step> selectedRecipeStep
+    private final LiveData<Step> selectedRecipeStep
             = Transformations.switchMap(selectedStepId,
             stepId -> Transformations.map(selectedRecipeSteps, steps -> {
         for (Step step : steps) {

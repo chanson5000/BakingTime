@@ -16,7 +16,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
 
     private List<Step> mSteps;
 
-    private RecipeStepOnClickHandler mClickHandler;
+    private final RecipeStepOnClickHandler mClickHandler;
 
     public interface RecipeStepOnClickHandler {
         void onStepClick(Step step);

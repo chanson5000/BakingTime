@@ -18,11 +18,11 @@ import com.nverno.bakingtime.viewmodel.RecipeViewModel;
 
 public class IngredientsListFragment extends Fragment {
 
-    FragmentActivity mFragmentActivity;
-    Context mContext;
+    private FragmentActivity mFragmentActivity;
+    private Context mContext;
 
-    private RecipeViewModel recipeViewModel;
     private IngredientsAdapter mIngredientsAdapter;
+    RecipeViewModel recipeViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -34,6 +34,8 @@ public class IngredientsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
+
     }
 
     @Override
@@ -60,8 +62,6 @@ public class IngredientsListFragment extends Fragment {
     }
 
     private void initViewModel() {
-        recipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
-
         recipeViewModel.getSelectedRecipeIngredients().observe(this, ingredients -> {
                     if (ingredients != null && !ingredients.isEmpty()) {
                         mIngredientsAdapter.setIngredientsData(ingredients);

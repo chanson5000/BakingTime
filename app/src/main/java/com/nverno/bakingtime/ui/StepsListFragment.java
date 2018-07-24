@@ -37,7 +37,6 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-
         mFragmentViewChanger = (FragmentViewChanger) context;
         mFragmentActivity = getActivity();
     }
@@ -45,6 +44,7 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRecipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
     }
 
     @Override
@@ -76,8 +76,6 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     }
 
     private void initViewModel() {
-        mRecipeViewModel = ViewModelProviders.of(mFragmentActivity).get(RecipeViewModel.class);
-
         mRecipeViewModel.getSelectedRecipeSteps().observe(this, steps -> {
             if (steps != null && !steps.isEmpty()) {
                 mStepsAdapter.setStepsData(steps);
@@ -86,7 +84,7 @@ public class StepsListFragment extends Fragment implements StepsAdapter.RecipeSt
     }
 
     // Separate actions for these depending on the layout size.
-    public void onIngredientClick() {
+    private void onIngredientClick() {
         if (!mLargeLayout) {
             Intent intent = new Intent(getContext(), IngredientListActivity.class);
 

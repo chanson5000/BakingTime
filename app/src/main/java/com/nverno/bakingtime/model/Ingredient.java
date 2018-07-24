@@ -68,6 +68,7 @@ public class Ingredient {
         return uniqueId;
     }
 
+    @SuppressWarnings("unused")
     public void setUniqueId(int uniqueId) {
         this.uniqueId = uniqueId;
     }
