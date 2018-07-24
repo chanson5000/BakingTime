@@ -168,15 +168,6 @@ public class StepMediaFragment extends Fragment {
         mExoPlayer = null;
     }
 
-    // onPause, onSaveInstanceState, and onStop in their order of execution.
-    public void onPause() {
-        super.onPause();
-        if (Util.SDK_INT <= 23 && mExoPlayer != null) {
-            savePlayerState();
-            releasePlayer();
-        }
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -188,7 +179,7 @@ public class StepMediaFragment extends Fragment {
 
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23 && mExoPlayer != null) {
+        if (mExoPlayer != null) {
             savePlayerState();
             releasePlayer();
         }
