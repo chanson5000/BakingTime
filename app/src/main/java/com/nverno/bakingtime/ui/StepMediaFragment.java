@@ -180,9 +180,9 @@ public class StepMediaFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        if (mExoPlayerCurrentPosition != null & mExoPlayerPlayWhenReady != null) {
-            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayerCurrentPosition);
-            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayerPlayWhenReady);
+        if (mExoPlayer != null) {
+            savedInstanceState.putLong(EXO_CURRENT_POS, mExoPlayer.getCurrentPosition());
+            savedInstanceState.putBoolean(EXO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
         }
     }
 
